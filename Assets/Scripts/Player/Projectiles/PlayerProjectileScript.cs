@@ -33,6 +33,20 @@ public class PlayerProjectileScript : MonoBehaviour
     private void SetWeaponRotation()
     {
         weaponRotationOrigin.transform.eulerAngles = new Vector3(0f, 0f, weaponRotationAngle);
+        
+        if (weaponRotationAngle > 90f && weaponRotationAngle < 180f)
+        {
+            weaponRotationOrigin.transform.GetChild(1).gameObject.transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
+        }
+        else if(weaponRotationAngle > -180f && weaponRotationAngle < -90f)
+        {
+            weaponRotationOrigin.transform.GetChild(1).gameObject.transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
+        }
+        else
+        {
+            weaponRotationOrigin.transform.GetChild(1).gameObject.transform.localRotation = Quaternion.Euler(0f,0f,0f);
+        }
+
     }
     private void GetMouseWorldPosition()
     {
@@ -50,6 +64,6 @@ public class PlayerProjectileScript : MonoBehaviour
     //done to avoid perfect accuracy
     //Rotation of the spawned projectile will be 90 to the mouse, and it will move in a certain speed towards that direction
     //It will disappear once it hits an enemy or a wall
-    //Questions
-    //How can I rotate the hand towards the mouse?
+
+ 
 }
