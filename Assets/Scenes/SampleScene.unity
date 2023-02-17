@@ -949,7 +949,7 @@ Transform:
   m_Children:
   - {fileID: 1925471137}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &816690831
 MonoBehaviour:
@@ -997,7 +997,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd138cc54115a7d4aa6e7bf01b3d39d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  basicProjectile: {fileID: 837426712}
 --- !u!1 &837426712
 GameObject:
   m_ObjectHideFlags: 0
@@ -1076,12 +1075,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 837426712}
   m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 6.392134, y: -43.770008, z: 0.43408236}
-  m_LocalScale: {x: 0.20000002, y: 0.20000002, z: 1}
+  m_LocalPosition: {x: 0.346797, y: 1.8648987, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1738571413}
-  m_RootOrder: 11
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!50 &837426715
 Rigidbody2D:
@@ -1843,9 +1842,8 @@ Transform:
   - {fileID: 1201162433}
   - {fileID: 536847630}
   - {fileID: 904441080}
-  - {fileID: 837426714}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1908755631
 GameObject:
