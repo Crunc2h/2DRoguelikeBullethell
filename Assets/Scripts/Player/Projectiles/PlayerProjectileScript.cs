@@ -4,25 +4,19 @@ using UnityEngine;
 
 public class PlayerProjectileScript : MonoBehaviour
 {
-    private GameObject projectileClone;
-    private GameObject weaponRotationOrigin;
-    private Vector3 projectileSpawnPos;
-    private Quaternion initialProjectileRotation;
-    private bool isFiring = false;
     [SerializeField] GameObject basicProjectile;
-    [SerializeField] float projectileForce;
+    [SerializeField] float projectileForce = 1500f;
     [SerializeField] private float fireRate = 3f;
+    [SerializeField] private float accuracy = 1f;
+    [SerializeField] private float projectileLifetime = 2f;
+    private GameObject projectileClone;
+    private Quaternion initialProjectileRotation;
+    private Vector3 projectileSpawnPos;
     private float fireTimer = 0f;
-    private void Start()
-    {
-        if(GameObject.FindGameObjectWithTag("WeaponRotationOrigin") != null)
-        {
-            weaponRotationOrigin = GameObject.FindGameObjectWithTag("WeaponRotationOrigin");
-        }
-    }
+    private bool isFiring = false;
+    
     private void Update()
     {
-        CalculateProjectilePositionAndRotation();
         if (Input.GetMouseButtonDown(0))
         {
             FireProjectile();
@@ -42,10 +36,7 @@ public class PlayerProjectileScript : MonoBehaviour
                 fireTimer = 0f;
                 FireProjectile();
             }
-        }
-
-
-        
+        }     
     }
 
     private void CalculateProjectilePositionAndRotation()
@@ -54,19 +45,19 @@ public class PlayerProjectileScript : MonoBehaviour
         {
             projectileSpawnPos = GameObject.FindGameObjectWithTag("projectileSpawn").transform.position;
         }
-        initialProjectileRotation = Quaternion.Euler(0f, 0f, weaponRotationOrigin.transform.rotation.z * 180f);
+        initialProjectileRotation = Quaternion.Euler(0f, 0f, 
+            GetComponent<PlayerWeaponScript>().weaponRotationAngle + Random.Range(-20f, 20f) * (1 / accuracy));
     }
-
+    private IEnumerator projectileLifeTime(GameObject projectile)
+    {
+        yield return new WaitForSeconds(projectileLifetime);
+        Destroy(projectile);
+    }
     private void FireProjectile()
     {
-        //Rotation is the rotation of the weapon rotation origins rotation z and 0-0 for x and y
-        //Initial position is 2.5f plus on the x and 0.75 on the y axis for the weapon position
+        CalculateProjectilePositionAndRotation();
         projectileClone = Instantiate(basicProjectile, projectileSpawnPos, initialProjectileRotation);
-        Debug.Log("WeaponRotationOriginAngle");
-        Debug.Log(weaponRotationOrigin.transform.localRotation.z); //WHY IS ORIGIN ROTATION Z AND WEAPON ROTATION ANGLE ARE UNEQUAL???
-        Debug.Log("WeaponRotationAngle");
-        Debug.Log(GetComponent<PlayerWeaponScript>().weaponRotationAngle);
-
-        //projectileClone.GetComponent<Rigidbody2D>().AddForce(new Vector2(Mathf.Cos(initialProjectileRotation.z), Mathf.Sin(initialProjectileRotation.z)) * projectileForce); 
+        projectileClone.GetComponent<Rigidbody2D>().AddForce((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
+        StartCoroutine(projectileLifeTime(projectileClone));
     }
 }
