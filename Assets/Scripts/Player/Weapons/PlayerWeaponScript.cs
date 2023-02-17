@@ -6,7 +6,7 @@ public class PlayerWeaponScript : MonoBehaviour
 {
     private Vector2 mouseWorldPosition;
     private Vector2 weaponAimDirection;
-    private float weaponRotationAngle = 0f;
+    public float weaponRotationAngle = 0f;
     private GameObject weaponRotationOrigin;
     private void Awake()
     {
@@ -23,7 +23,7 @@ public class PlayerWeaponScript : MonoBehaviour
     }
     private void SetWeaponRotation()
     {
-        weaponRotationOrigin.transform.eulerAngles = new Vector3(0f, 0f, weaponRotationAngle);
+        weaponRotationOrigin.transform.localRotation = Quaternion.Euler(0f,0f, weaponRotationAngle);
         
         if (weaponRotationAngle > 90f && weaponRotationAngle < 180f)
         {
