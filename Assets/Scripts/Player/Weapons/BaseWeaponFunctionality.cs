@@ -18,12 +18,13 @@ public class BaseWeaponFunctionality : MonoBehaviour
     private float fireTimer = 0f;
     private bool isFiring = false;
     private bool isReloading = false;
+    private bool fireOnCooldown = false;
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (!isReloading)
+            if (!isReloading && !fireOnCooldown)
             {
                 fireProjectile();
             }
@@ -46,9 +47,18 @@ public class BaseWeaponFunctionality : MonoBehaviour
             if (fireTimer > (1f / fireRate))
             {
                 fireTimer = 0f;
-                fireProjectile();
+                if(!fireOnCooldown)
+                {
+                    fireProjectile();
+                }
             }
         }
+    }
+    private IEnumerator fireCooldown()
+    {
+        fireOnCooldown = true;
+        yield return new WaitForSeconds((1 / fireRate));
+        fireOnCooldown = false;
     }
 
     private void calculateProjectilePositionAndRotation()
@@ -84,6 +94,7 @@ public class BaseWeaponFunctionality : MonoBehaviour
         projectileClone.GetComponent<Rigidbody2D>().AddForce((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
         StartCoroutine(projectileLifeTime(projectileClone));
         StartCoroutine(muzzleFlash());
+        StartCoroutine(fireCooldown());
         GetComponent<Animator>().SetTrigger("recoil");
         currentAmmo--;
         if (currentAmmo <= 0)
