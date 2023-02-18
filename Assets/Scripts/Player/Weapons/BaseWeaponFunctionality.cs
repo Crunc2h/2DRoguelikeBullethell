@@ -71,16 +71,25 @@ public class BaseWeaponFunctionality : MonoBehaviour
         currentAmmo = maxAmmo;
         isReloading = false;
     }
+    private IEnumerator muzzleFlash()
+    {
+        GameObject.FindGameObjectWithTag("muzzleFlash").gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        yield return new WaitForSeconds(0.1f);
+        GameObject.FindGameObjectWithTag("muzzleFlash").gameObject.GetComponent<SpriteRenderer>().enabled = false;
+    }
     private void fireProjectile()
     {
         calculateProjectilePositionAndRotation();
         projectileClone = Instantiate(projectile, projectileSpawnPos, initialProjectileRotation);
         projectileClone.GetComponent<Rigidbody2D>().AddForce((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
         StartCoroutine(projectileLifeTime(projectileClone));
+        StartCoroutine(muzzleFlash());
+        GetComponent<Animator>().SetTrigger("recoil");
         currentAmmo--;
         if (currentAmmo <= 0)
         {
             StartCoroutine(reload());
         }
     }
+
 }

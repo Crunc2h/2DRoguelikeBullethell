@@ -6,8 +6,10 @@ TagManager:
   tags:
   - Wall
   - WeaponRotationOrigin
-  - projectileSpawn
   - projectile
+  - weapon
+  - projectileSpawnPoint
+  - muzzleFlash
   layers:
   - Default
   - TransparentFX
@@ -54,6 +56,9 @@ TagManager:
   - name: Player
     uniqueID: 237221981
     locked: 0
-  - name: AbovePlayer
+  - name: 1AbovePlayer
+    uniqueID: 4202413563
+    locked: 0
+  - name: 2AbovePlayer
     uniqueID: 896985483
     locked: 0

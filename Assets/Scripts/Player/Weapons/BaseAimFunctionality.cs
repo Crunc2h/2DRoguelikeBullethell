@@ -7,14 +7,11 @@ public class BaseAimFunctionality : MonoBehaviour
     private Vector2 weaponAimDirection;
     public float weaponRotationAngle = 0f;
     private GameObject weaponRotationOrigin;
-    private GameObject weapon;
+    private Animator anim;
     private void Awake()
     {
         weaponRotationOrigin = GameObject.FindGameObjectWithTag("WeaponRotationOrigin");
-        if(GameObject.FindGameObjectWithTag("weapon") != null)
-        {
-            weapon = GameObject.FindGameObjectWithTag("weapon");
-        }
+        anim = GetComponent<Animator>();
     }
     private void Update()
     {
@@ -22,6 +19,9 @@ public class BaseAimFunctionality : MonoBehaviour
         CalculateWeaponRotationAngle();
     }
     private void FixedUpdate()
+    {
+    }
+    private void LateUpdate()
     {
         SetWeaponRotation();
     }
@@ -31,15 +31,15 @@ public class BaseAimFunctionality : MonoBehaviour
 
         if (weaponRotationAngle > 90f && weaponRotationAngle < 180f)
         {
-           weapon.transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
+            anim.SetTrigger("rotateXPositive");
         }
         else if (weaponRotationAngle > -180f && weaponRotationAngle < -90f)
         {
-            weapon.transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
+            anim.SetTrigger("rotateXPositive");
         }
         else
         {
-            weapon.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+            anim.SetTrigger("rotateXNegative");
         }
 
     }
@@ -52,7 +52,4 @@ public class BaseAimFunctionality : MonoBehaviour
         weaponAimDirection = (mouseWorldPosition - (Vector2)transform.position).normalized;
         weaponRotationAngle = Mathf.Atan2(weaponAimDirection.y, weaponAimDirection.x) * Mathf.Rad2Deg;
     }
-
-    //1 - Rotates the "hand" and weapon towards the mouse icon - partially done
-
 }
