@@ -2074,6 +2074,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Revolver
       objectReference: {fileID: 0}
+    - target: {fileID: 8192359544804565743, guid: 109cea4785b35cb42b5c50e8e9babc18, type: 3}
+      propertyPath: shakeDuration
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 8192359544804565743, guid: 109cea4785b35cb42b5c50e8e9babc18, type: 3}
+      propertyPath: shakeIntensity
+      value: 0.08
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 109cea4785b35cb42b5c50e8e9babc18, type: 3}
 --- !u!1 &1908755631
