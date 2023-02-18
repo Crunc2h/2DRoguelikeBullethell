@@ -10,6 +10,8 @@ TagManager:
   - weapon
   - projectileSpawnPoint
   - muzzleFlash
+  - bulletTrail
+  - reloadTimer
   layers:
   - Default
   - TransparentFX

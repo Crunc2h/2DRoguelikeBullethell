@@ -5,62 +5,75 @@ using UnityEngine;
 public class BaseWeaponFunctionality : MonoBehaviour
 {
     [SerializeField] GameObject projectile;
-    [SerializeField] float projectileForce = 1500f;
+    [Header("Projectile Configuration")]
+    [SerializeField] private float projectileForce = 1500f;
+    [SerializeField] private float projectileLifetime = 2f;
     [SerializeField] private float fireRate = 3f;
     [SerializeField] private float accuracy = 1f;
-    [SerializeField] private float projectileLifetime = 2f;
     [SerializeField] private float maxAmmo = 20f;
+    [SerializeField] private float currentAmmo = 20f;
     [SerializeField] private float reloadDuration = 2f;
-    private float currentAmmo = 20f;
+    [Header("Camera Shake Configuration")]
+    [SerializeField] private float shakeIntensity = 0.07f;
+    [SerializeField] private float shakeDuration = 0.02f;
+    [Header("SFX")]
+    [SerializeField] private AudioSource reloadSFX;
+    [SerializeField] private AudioSource emptySFX;
+    [SerializeField] private AudioSource pistolFireSFX;
     private GameObject projectileClone;
     private Quaternion initialProjectileRotation;
     private Vector3 projectileSpawnPos;
-    private float fireTimer = 0f;
+    private bool lmbDown = false;
     private bool isFiring = false;
     private bool isReloading = false;
-    private bool fireOnCooldown = false;
 
+ 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (!isReloading && !fireOnCooldown)
+            lmbDown = true;
+            if(isReloading)
             {
-                fireProjectile();
+                emptySFX.Play();
             }
-            isFiring = true;
+            if(!isFiring)
+            {
+                StartCoroutine(automaticFiring());
+            }
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            fireTimer = 0f;
-            isFiring = false;
+            lmbDown = false;
         }
-
         if (Input.GetKeyDown(KeyCode.R) && !isReloading && currentAmmo < maxAmmo)
         {
-            StartCoroutine(reload());
-        }
-
-        if (isFiring && !isReloading)
-        {
-            fireTimer += Time.deltaTime;
-            if (fireTimer > (1f / fireRate))
-            {
-                fireTimer = 0f;
-                if(!fireOnCooldown)
-                {
-                    fireProjectile();
-                }
-            }
+            StartCoroutine(reloadLogic());
         }
     }
-    private IEnumerator fireCooldown()
+    private IEnumerator automaticFiring()
     {
-        fireOnCooldown = true;
-        yield return new WaitForSeconds((1 / fireRate));
-        fireOnCooldown = false;
+        isFiring = true;
+        while(lmbDown && !isReloading)
+        {
+            fireProjectileLogic();
+            yield return new WaitForSeconds(1 / fireRate);
+        }
+        isFiring= false;
     }
-
+    private void fireProjectileLogic()
+    {
+        fireProjectileFX();
+        calculateProjectilePositionAndRotation();
+        projectileClone = Instantiate(projectile, projectileSpawnPos, initialProjectileRotation);
+        projectileClone.GetComponent<Rigidbody2D>().AddForce((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
+        StartCoroutine(projectileLifeTime(projectileClone));
+        currentAmmo--;
+        if (currentAmmo <= 0)
+        {
+            StartCoroutine(reloadLogic());
+        }
+    }
     private void calculateProjectilePositionAndRotation()
     {
         if (GameObject.FindGameObjectWithTag("projectileSpawnPoint"))
@@ -74,33 +87,46 @@ public class BaseWeaponFunctionality : MonoBehaviour
         yield return new WaitForSeconds(projectileLifetime);
         Destroy(projectile);
     }
-    private IEnumerator reload()
+    private IEnumerator reloadLogic()
     {
         isReloading = true;
+        StartCoroutine(reloadFX());
         yield return new WaitForSeconds(reloadDuration);
         currentAmmo = maxAmmo;
         isReloading = false;
     }
+    private void fireProjectileFX()
+    {
+        pistolFireSFX.Play();
+        GetComponent<Animator>().SetTrigger("recoil");
+        StartCoroutine(GameObject.FindGameObjectWithTag("MainCamera").GetComponent<BasicCamera>().Shake(shakeIntensity, shakeDuration, 0.001f));
+        StartCoroutine(muzzleFlash());
+        StartCoroutine(bulletTrail());
+    }
+    private IEnumerator reloadFX()
+    {
+        reloadSFX.Play();
+        GameObject.FindGameObjectWithTag("reloadTimer").GetComponent<SpriteRenderer>().enabled = true;
+        GameObject.FindGameObjectWithTag("reloadTimer").transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        GameObject.FindGameObjectWithTag("reloadTimer").transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        GameObject.FindGameObjectWithTag("reloadTimer").transform.GetChild(2).gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        GameObject.FindGameObjectWithTag("reloadTimer").GetComponent<Animator>().SetTrigger("reload");
+        yield return new WaitForSeconds(reloadDuration);
+        GameObject.FindGameObjectWithTag("reloadTimer").GetComponent<SpriteRenderer>().enabled = false;
+        GameObject.FindGameObjectWithTag("reloadTimer").transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        GameObject.FindGameObjectWithTag("reloadTimer").transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        GameObject.FindGameObjectWithTag("reloadTimer").transform.GetChild(2).gameObject.GetComponent<SpriteRenderer>().enabled = false;
+    }
     private IEnumerator muzzleFlash()
     {
-        GameObject.FindGameObjectWithTag("muzzleFlash").gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        GameObject.FindGameObjectWithTag("muzzleFlash").GetComponent<SpriteRenderer>().enabled = true;
         yield return new WaitForSeconds(0.1f);
-        GameObject.FindGameObjectWithTag("muzzleFlash").gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        GameObject.FindGameObjectWithTag("muzzleFlash").GetComponent<SpriteRenderer>().enabled = false;
     }
-    private void fireProjectile()
+    private IEnumerator bulletTrail()
     {
-        calculateProjectilePositionAndRotation();
-        projectileClone = Instantiate(projectile, projectileSpawnPos, initialProjectileRotation);
-        projectileClone.GetComponent<Rigidbody2D>().AddForce((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
-        StartCoroutine(projectileLifeTime(projectileClone));
-        StartCoroutine(muzzleFlash());
-        StartCoroutine(fireCooldown());
-        GetComponent<Animator>().SetTrigger("recoil");
-        currentAmmo--;
-        if (currentAmmo <= 0)
-        {
-            StartCoroutine(reload());
-        }
+        GameObject.FindGameObjectWithTag("bulletTrail").GetComponent<SpriteRenderer>().enabled = true;
+        yield return new WaitForSeconds(0.05f);
+        GameObject.FindGameObjectWithTag("bulletTrail").GetComponent<SpriteRenderer>().enabled = false;
     }
-
 }

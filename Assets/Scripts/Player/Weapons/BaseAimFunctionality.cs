@@ -18,9 +18,6 @@ public class BaseAimFunctionality : MonoBehaviour
     }
     private void FixedUpdate()
     {
-    }
-    private void LateUpdate()
-    {
         SetWeaponRotation();
     }
     private void SetWeaponRotation()
