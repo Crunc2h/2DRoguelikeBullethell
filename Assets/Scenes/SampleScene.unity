@@ -1013,11 +1013,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   basicProjectile: {fileID: 2403154328813617290, guid: 9a2ac5659d3ad7544b5e062ec11631ed, type: 3}
   projectileForce: 1500
-  fireRate: 10
+  fireRate: 5
   accuracy: 2
   projectileLifetime: 2
-  maxAmmo: 20
-  reloadDuration: 2
 --- !u!1 &877550315
 GameObject:
   m_ObjectHideFlags: 0

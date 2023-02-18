@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class WeaponScript : MonoBehaviour
+public class BaseAimFunctionality : MonoBehaviour
 {
     private Vector2 mouseWorldPosition;
     private Vector2 weaponAimDirection;
@@ -14,7 +13,7 @@ public class WeaponScript : MonoBehaviour
     }
     private void Update()
     {
-        GetMouseWorldPosition();     
+        GetMouseWorldPosition();
         CalculateWeaponRotationAngle();
     }
     private void FixedUpdate()
@@ -23,19 +22,19 @@ public class WeaponScript : MonoBehaviour
     }
     private void SetWeaponRotation()
     {
-        weaponRotationOrigin.transform.localRotation = Quaternion.Euler(0f,0f, weaponRotationAngle);
-        
+        weaponRotationOrigin.transform.localRotation = Quaternion.Euler(0f, 0f, weaponRotationAngle);
+
         if (weaponRotationAngle > 90f && weaponRotationAngle < 180f)
         {
-            weaponRotationOrigin.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
+            weaponRotationOrigin.transform.GetChild(1).gameObject.transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
         }
-        else if(weaponRotationAngle > -180f && weaponRotationAngle < -90f)
+        else if (weaponRotationAngle > -180f && weaponRotationAngle < -90f)
         {
-            weaponRotationOrigin.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
+            weaponRotationOrigin.transform.GetChild(1).gameObject.transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
         }
         else
         {
-            weaponRotationOrigin.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform.localRotation = Quaternion.Euler(0f,0f,0f);
+            weaponRotationOrigin.transform.GetChild(1).gameObject.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
         }
 
     }

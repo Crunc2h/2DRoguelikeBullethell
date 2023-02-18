@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovementScript : MonoBehaviour
+public class BasePlayerMovement : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 10f;
     private Vector2 inputScale;
