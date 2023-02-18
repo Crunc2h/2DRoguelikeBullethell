@@ -7,9 +7,14 @@ public class BaseAimFunctionality : MonoBehaviour
     private Vector2 weaponAimDirection;
     public float weaponRotationAngle = 0f;
     private GameObject weaponRotationOrigin;
+    private GameObject weapon;
     private void Awake()
     {
         weaponRotationOrigin = GameObject.FindGameObjectWithTag("WeaponRotationOrigin");
+        if(GameObject.FindGameObjectWithTag("weapon") != null)
+        {
+            weapon = GameObject.FindGameObjectWithTag("weapon");
+        }
     }
     private void Update()
     {
@@ -26,15 +31,15 @@ public class BaseAimFunctionality : MonoBehaviour
 
         if (weaponRotationAngle > 90f && weaponRotationAngle < 180f)
         {
-            weaponRotationOrigin.transform.GetChild(1).gameObject.transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
+           weapon.transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
         }
         else if (weaponRotationAngle > -180f && weaponRotationAngle < -90f)
         {
-            weaponRotationOrigin.transform.GetChild(1).gameObject.transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
+            weapon.transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
         }
         else
         {
-            weaponRotationOrigin.transform.GetChild(1).gameObject.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+            weapon.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
         }
 
     }
