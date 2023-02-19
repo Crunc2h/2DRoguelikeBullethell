@@ -8,7 +8,7 @@ public class ProjectileCollisionTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Wall"))
+        if(collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Mob"))
         {
             Destroy(gameObject);
         }

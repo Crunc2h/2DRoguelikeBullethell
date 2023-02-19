@@ -53,6 +53,7 @@ public class BaseAimFunctionality : MonoBehaviour
             targetWorldPosition = (Vector2)GameObject.FindGameObjectWithTag("Player").transform.position;
             weaponAimDirection = (targetWorldPosition - (Vector2)transform.position).normalized;
             weaponRotationAngle = Mathf.Atan2(weaponAimDirection.y, weaponAimDirection.x) * Mathf.Rad2Deg;
+            GetComponentInChildren<BaseWeaponFunctionalityEnemy>().currentWeaponRotation = weaponRotationAngle;
         }
     }
 }

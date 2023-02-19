@@ -16,6 +16,7 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
     private GameObject projectileClone;
     private GameObject muzzleFlash;
     private GameObject bulletTrail;
+    public float currentWeaponRotation;
     private Quaternion initialProjectileRotation;
     private Vector3 projectileSpawnPos;
     public bool fireCommand = false;
@@ -67,7 +68,7 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
             projectileSpawnPos = transform.GetChild(1).gameObject.transform.position;
         }
         initialProjectileRotation = Quaternion.Euler(0f, 0f, 
-            GameObject.FindGameObjectWithTag("Mob").GetComponent<BaseAimFunctionality>().weaponRotationAngle + Random.Range(-20f, 20f) * (1 / accuracy));
+            currentWeaponRotation + Random.Range(-20f, 20f) * (1 / accuracy));
     }
     private IEnumerator projectileLifeTime(GameObject projectile)
     {
