@@ -869,6 +869,7 @@ GameObject:
   - component: {fileID: 760260488}
   - component: {fileID: 760260487}
   - component: {fileID: 760260486}
+  - component: {fileID: 760260496}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Mob
@@ -972,6 +973,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f20a7d3c8cbe944d9e7f3af84a356df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponAimDirection: {x: 0, y: 0}
   weaponRotationAngle: 0
 --- !u!61 &760260492
 BoxCollider2D:
@@ -1088,6 +1090,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &760260496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760260485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f3e5fa65be61f1438d99fa68d003a5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raycastDistance: 10
 --- !u!1 &776518379
 GameObject:
   m_ObjectHideFlags: 0
@@ -1134,7 +1149,7 @@ GameObject:
   - component: {fileID: 816690831}
   - component: {fileID: 816690832}
   - component: {fileID: 816690833}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1282,6 +1297,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f20a7d3c8cbe944d9e7f3af84a356df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponAimDirection: {x: 0, y: 0}
   weaponRotationAngle: 0
 --- !u!1 &877550315
 GameObject:
@@ -1960,7 +1976,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1370587422}
   - component: {fileID: 1370587423}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Edge2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2044,7 +2060,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1438981574}
   - component: {fileID: 1438981575}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Edge1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2129,7 +2145,7 @@ GameObject:
   - component: {fileID: 1508737335}
   - component: {fileID: 1508737334}
   - component: {fileID: 1508737333}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ReloadTimer
   m_TagString: reloadTimer
   m_Icon: {fileID: 0}
@@ -2544,7 +2560,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1760816100}
   - component: {fileID: 1760816101}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Index
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2629,6 +2645,14 @@ PrefabInstance:
       propertyPath: m_Volume
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1011072623051453648, guid: 109cea4785b35cb42b5c50e8e9babc18, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1645922722426714096, guid: 109cea4785b35cb42b5c50e8e9babc18, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4834312212925423840, guid: 109cea4785b35cb42b5c50e8e9babc18, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -2676,6 +2700,18 @@ PrefabInstance:
     - target: {fileID: 5603489293591016296, guid: 109cea4785b35cb42b5c50e8e9babc18, type: 3}
       propertyPath: m_Name
       value: Revolver
+      objectReference: {fileID: 0}
+    - target: {fileID: 5603489293591016296, guid: 109cea4785b35cb42b5c50e8e9babc18, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7637955885363028395, guid: 109cea4785b35cb42b5c50e8e9babc18, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8458047663062539728, guid: 109cea4785b35cb42b5c50e8e9babc18, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 109cea4785b35cb42b5c50e8e9babc18, type: 3}
@@ -3273,7 +3309,7 @@ SpriteRenderer:
   m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0.6213611, b: 0, a: 0.7019608}
+  m_Color: {r: 1, g: 0.6213611, b: 0, a: 0.25490198}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

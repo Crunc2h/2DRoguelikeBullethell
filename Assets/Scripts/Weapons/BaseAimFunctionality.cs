@@ -4,7 +4,7 @@ using UnityEngine;
 public class BaseAimFunctionality : MonoBehaviour
 {
     private Vector2 targetWorldPosition;
-    private Vector2 weaponAimDirection;
+    public Vector2 weaponAimDirection;
     public float weaponRotationAngle = 0f;
     private GameObject weaponRotationOrigin;
     private GameObject weaponSlot;

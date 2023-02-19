@@ -18,16 +18,11 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
     private GameObject bulletTrail;
     private Quaternion initialProjectileRotation;
     private Vector3 projectileSpawnPos;
-    private bool stopFiring = true;
+    public bool fireCommand = false;
+    private bool isFiring = false;
 
-
-    private void Update()
+    private void Awake()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            stopFiring = !stopFiring;
-            StartCoroutine(automaticFiring());
-        }
         if (transform.GetChild(2).gameObject.CompareTag("muzzleFlash"))
         {
             muzzleFlash = transform.GetChild(2).gameObject;
@@ -37,13 +32,25 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
             bulletTrail = transform.GetChild(3).gameObject;
         }
     }
+    private void Update()
+    {
+        if(fireCommand)
+        {
+            if(!isFiring)
+            {
+                StartCoroutine(automaticFiring());
+            }
+        }
+    }
     private IEnumerator automaticFiring()
     {
-        while (!stopFiring)
+        isFiring = true;
+        while (fireCommand)
         {
             fireProjectileLogic();
             yield return new WaitForSeconds((1 / fireRate) + Random.Range(-0.5f * (1 / fireRate), 0.5f * (1 / fireRate)));
         }
+        isFiring = false;
     }
     private void fireProjectileLogic()
     {
