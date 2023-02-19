@@ -12,11 +12,12 @@ TagManager:
   - muzzleFlash
   - bulletTrail
   - reloadTimer
+  - Mob
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Obstacle
   - Water
   - UI
   - 
