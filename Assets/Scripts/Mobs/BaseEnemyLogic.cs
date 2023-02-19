@@ -26,6 +26,7 @@ public class BaseEnemyLogic : MonoBehaviour
     private bool shiftOnCooldown = false;
     private void Awake()
     {
+        GetComponent<AIDestinationSetter>().target = GameObject.FindGameObjectWithTag("Player").transform;
         obstacleLayer = LayerMask.GetMask("Obstacle");
         playerLayer = LayerMask.GetMask("PlayerLayer");
         rb = GetComponent<Rigidbody2D>();

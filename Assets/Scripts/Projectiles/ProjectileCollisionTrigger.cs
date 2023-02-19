@@ -10,6 +10,14 @@ public class ProjectileCollisionTrigger : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Mob"))
         {
+            if(collision.gameObject.CompareTag("Player"))
+            {
+                collision.gameObject.GetComponent<BasePlayerHealth>().TakeDamage();
+            }
+            if(collision.gameObject.CompareTag("Mob"))
+            {
+                collision.gameObject.GetComponent<BaseEnemyHealth>().TakeDamage();
+            }
             Destroy(gameObject);
         }
     }
