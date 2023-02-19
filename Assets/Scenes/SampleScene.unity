@@ -135,7 +135,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 46d13c7c16400f04d87edd307098c500, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -863,6 +863,7 @@ GameObject:
   m_Component:
   - component: {fileID: 760260494}
   - component: {fileID: 760260493}
+  - component: {fileID: 760260495}
   - component: {fileID: 760260492}
   - component: {fileID: 760260489}
   - component: {fileID: 760260488}
@@ -1066,6 +1067,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &760260495
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760260485}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!1 &776518379
 GameObject:
   m_ObjectHideFlags: 0
@@ -1095,7 +1117,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4834312213413519710}
-  - {fileID: 7637955884685829776}
   m_Father: {fileID: 1905107883}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2604,6 +2625,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 877550316}
     m_Modifications:
+    - target: {fileID: 1819853487, guid: 109cea4785b35cb42b5c50e8e9babc18, type: 3}
+      propertyPath: m_Volume
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4834312212925423840, guid: 109cea4785b35cb42b5c50e8e9babc18, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -3150,6 +3175,7 @@ Transform:
   - {fileID: 1645922721670116943}
   - {fileID: 4282209389709088140}
   - {fileID: 4597513509426816399}
+  - {fileID: 7637955884685829776}
   m_Father: {fileID: 776518380}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3181,12 +3207,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7637955884685829778}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.97, y: 1.3955003, z: 0.7868424}
+  m_LocalPosition: {x: 8.669997, y: 0.77550113, z: 0.7868424}
   m_LocalScale: {x: 14, y: 0.14999999, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 776518380}
-  m_RootOrder: 1
+  m_Father: {fileID: 4834312213413519710}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7637955884685829778
 GameObject:
@@ -3340,13 +3366,9 @@ MonoBehaviour:
   projectile: {fileID: 2403154328813617290, guid: 9a2ac5659d3ad7544b5e062ec11631ed, type: 3}
   projectileForce: 1500
   projectileLifetime: 2
-  fireRate: 3
+  fireRate: 1
   accuracy: 1
-  maxAmmo: 20
-  currentAmmo: 20
-  reloadDuration: 2
   pistolFireSFX: {fileID: 23069457}
-  fireCommand: 0
 --- !u!212 &8819760961155707416
 SpriteRenderer:
   m_ObjectHideFlags: 0
