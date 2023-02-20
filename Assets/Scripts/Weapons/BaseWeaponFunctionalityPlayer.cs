@@ -36,13 +36,13 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
         {
             reloadTimer = GameObject.FindGameObjectWithTag("reloadTimer");
         }
-        if (transform.GetChild(1).gameObject.CompareTag("muzzleFlash"))
+        if (transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.CompareTag("muzzleFlash"))
         {
-            muzzleFlash = transform.GetChild(1).gameObject;
+            muzzleFlash = transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
         }
-        if (transform.GetChild(2).gameObject.CompareTag("bulletTrail"))
+        if (transform.GetChild(2).gameObject.transform.GetChild(0).gameObject.CompareTag("bulletTrail"))
         {
-            bulletTrail = transform.GetChild(2).gameObject;
+            bulletTrail = transform.GetChild(2).gameObject.transform.GetChild(0).gameObject;
         }
     }
     private void Update()
@@ -93,7 +93,7 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
     }
     private void calculateProjectilePositionAndRotation()
     {
-        projectileSpawnPos = transform.GetChild(1).gameObject.transform.position;
+        projectileSpawnPos = transform.GetChild(0).gameObject.transform.position;
         initialProjectileRotation = Quaternion.Euler(0f, 0f, GameObject.FindGameObjectWithTag("Player").GetComponent<BaseAimFunctionality>().weaponRotationAngle + Random.Range(-20f, 20f) * (1 / accuracy));
     }
     private IEnumerator projectileLifeTime(GameObject projectile)
@@ -133,14 +133,20 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
     }
     private IEnumerator muzzleFlashFX()
     {
-        muzzleFlash.GetComponent<SpriteRenderer>().enabled = true;
-        yield return new WaitForSeconds(0.1f);
-        muzzleFlash.GetComponent<SpriteRenderer>().enabled = false;
+        if(muzzleFlash != null)
+        {
+            muzzleFlash.GetComponent<SpriteRenderer>().enabled = true;
+            yield return new WaitForSeconds(0.1f);
+            muzzleFlash.GetComponent<SpriteRenderer>().enabled = false;
+        }
     }
     private IEnumerator bulletTrailFX()
     {
-        bulletTrail.GetComponent<SpriteRenderer>().enabled = true;
-        yield return new WaitForSeconds(0.05f);
-        bulletTrail.GetComponent<SpriteRenderer>().enabled = false;
+        if(bulletTrail != null)
+        {
+            bulletTrail.GetComponent<SpriteRenderer>().enabled = true;
+            yield return new WaitForSeconds(0.05f);
+            bulletTrail.GetComponent<SpriteRenderer>().enabled = false;
+        }
     }
 }
