@@ -758,7 +758,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 46d13c7c16400f04d87edd307098c500, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.5
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -858,7 +858,7 @@ MonoBehaviour:
   projectileForce: 1500
   projectileLifetime: 2
   fireRate: 1
-  accuracy: 5
+  accuracy: 10
   pistolFireSFX: {fileID: 3655611133628499975}
   currentWeaponRotation: 0
   fireCommand: 0
