@@ -6,16 +6,22 @@ public class BaseAimFunctionality : MonoBehaviour
     private Vector2 targetWorldPosition;
     public Vector2 weaponAimDirection;
     public float weaponRotationAngle = 0f;
-    private GameObject weaponRotationOrigin;
-    private GameObject weaponSlot;
+    private GameObject weaponSlotOne;
+    private GameObject weaponSlotTwo;
+    private GameObject weapon;
+    private Renderer weaponSpriteRenderer;
     private void Awake()
     {
-        weaponRotationOrigin = transform.GetChild(0).gameObject;
-        weaponSlot = weaponRotationOrigin.transform.GetChild(0).gameObject;
-    }
-    private void Update()
-    {
-
+        weaponSlotOne = transform.GetChild(0).gameObject;
+        weaponSlotTwo = transform.GetChild(1).gameObject;
+        if(weaponSlotOne.transform.GetChild(0) != null)
+        {
+            weapon = weaponSlotOne.transform.GetChild(0).gameObject;
+        }
+        else
+        {
+            weapon = weaponSlotTwo.transform.GetChild(0).gameObject;
+        }
     }
     private void FixedUpdate()
     {
@@ -24,20 +30,39 @@ public class BaseAimFunctionality : MonoBehaviour
     private void SetWeaponRotation()
     {
         CalculateWeaponRotationAngleNTargetPosition();
-        weaponRotationOrigin.transform.localRotation = Quaternion.Euler(0f, 0f, weaponRotationAngle);
-        
-        if (weaponRotationAngle > 90f && weaponRotationAngle < 180f)
+        if(weaponRotationAngle >= -90f && weaponRotationAngle <= 90f)
         {
-            weaponSlot.transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
+            weaponSlotOne.transform.localRotation = Quaternion.Euler(0f, 0f, weaponRotationAngle);           
+            if(weapon.transform.parent.gameObject != weaponSlotOne)
+            {
+                weapon.transform.SetParent(weaponSlotOne.transform, false);
+            }      
+            if(weaponRotationAngle <= 90f && weaponRotationAngle >= 0f)
+            {
+                weapon.GetComponent<SpriteRenderer>().sortingOrder = 0;
+            }
+            else if(weaponRotationAngle < 0f && weaponRotationAngle >= -90f)
+            {
+                weapon.GetComponent<SpriteRenderer>().sortingOrder = 2;
+            }
         }
-        else if (weaponRotationAngle > -180f && weaponRotationAngle < -90f)
+        else if(weaponRotationAngle > 90f || weaponRotationAngle < -90f)
         {
-            weaponSlot.transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
+            weaponSlotTwo.transform.localRotation = Quaternion.Euler(180f, 0f, -weaponRotationAngle);          
+            if (weapon.transform.parent.gameObject != weaponSlotTwo)
+            {
+                weapon.transform.SetParent(weaponSlotTwo.transform, false);
+            }
+            if(weaponRotationAngle > 90f && weaponRotationAngle <= 180f)
+            {
+                weapon.GetComponent<SpriteRenderer>().sortingOrder = 0;
+            }
+            else if(weaponRotationAngle >= -180f && weaponRotationAngle < -90f)
+            {
+                weapon.GetComponent<SpriteRenderer>().sortingOrder = 2;
+            }
         }
-        else
-        {
-            weaponSlot.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
-        }
+
 
     }
     private void CalculateWeaponRotationAngleNTargetPosition()

@@ -24,13 +24,13 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
 
     private void Awake()
     {
-        if (transform.GetChild(2).gameObject.CompareTag("muzzleFlash"))
+        if (transform.GetChild(1).gameObject.CompareTag("muzzleFlash"))
         {
-            muzzleFlash = transform.GetChild(2).gameObject;
+            muzzleFlash = transform.GetChild(1).gameObject;
         }
-        if (transform.GetChild(3).gameObject.CompareTag("bulletTrail"))
+        if (transform.GetChild(2).gameObject.CompareTag("bulletTrail"))
         {
-            bulletTrail = transform.GetChild(3).gameObject;
+            bulletTrail = transform.GetChild(2).gameObject;
         }
     }
     private void Update()
