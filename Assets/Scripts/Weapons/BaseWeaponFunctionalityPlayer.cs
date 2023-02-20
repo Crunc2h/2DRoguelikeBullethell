@@ -36,14 +36,16 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
         {
             reloadTimer = GameObject.FindGameObjectWithTag("reloadTimer");
         }
-        if (transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.CompareTag("muzzleFlash"))
+        /*
+        if (transform.GetChild(1).gameObject.transform.GetChild(0).gameObject != null)
         {
             muzzleFlash = transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
         }
-        if (transform.GetChild(2).gameObject.transform.GetChild(0).gameObject.CompareTag("bulletTrail"))
+        if (transform.GetChild(2).gameObject.transform.GetChild(0).gameObject != null)
         {
             bulletTrail = transform.GetChild(2).gameObject.transform.GetChild(0).gameObject;
         }
+        */
     }
     private void Update()
     {
@@ -85,6 +87,11 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
         projectileClone = Instantiate(projectile, projectileSpawnPos, initialProjectileRotation);
         projectileClone.GetComponent<Rigidbody2D>().AddForce((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
         StartCoroutine(projectileLifeTime(projectileClone));
+        if(projectileClone.GetComponent<Animator>() != null)
+        {
+            Debug.Log("hellp");
+            projectileClone.GetComponent<Animator>().SetTrigger("spawn");
+        }
         currentAmmo--;
         if (currentAmmo <= 0)
         {

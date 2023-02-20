@@ -21,4 +21,5 @@ public class ProjectileCollisionTrigger : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
 }
