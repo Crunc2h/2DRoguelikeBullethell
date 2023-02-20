@@ -63,6 +63,10 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
+            if(pistolFireSFX.loop)
+            {
+                pistolFireSFX.Stop();
+            }
             lmbDown = false;
         }
         if (Input.GetKeyDown(KeyCode.R) && !isReloading && currentAmmo < maxAmmo)
@@ -86,12 +90,11 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
         calculateProjectilePositionAndRotation();
         projectileClone = Instantiate(projectile, projectileSpawnPos, initialProjectileRotation);
         projectileClone.GetComponent<Rigidbody2D>().AddForce((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
-        StartCoroutine(projectileLifeTime(projectileClone));
         if(projectileClone.GetComponent<Animator>() != null)
         {
-            Debug.Log("hellp");
-            projectileClone.GetComponent<Animator>().SetTrigger("spawn");
+            projectileClone.GetComponent<Animator>().SetTrigger("playerProjectile");
         }
+        StartCoroutine(projectileLifeTime(projectileClone));
         currentAmmo--;
         if (currentAmmo <= 0)
         {
@@ -101,7 +104,7 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
     private void calculateProjectilePositionAndRotation()
     {
         projectileSpawnPos = transform.GetChild(0).gameObject.transform.position;
-        initialProjectileRotation = Quaternion.Euler(0f, 0f, GameObject.FindGameObjectWithTag("Player").GetComponent<BaseAimFunctionality>().weaponRotationAngle + Random.Range(-20f, 20f) * (1 / accuracy));
+        initialProjectileRotation = Quaternion.Euler(0f, 0f, GameObject.FindGameObjectWithTag("Player").GetComponent<BaseAimFunctionality>().weaponRotationAngle + Random.Range(-30f, 30f) * (1 / accuracy));
     }
     private IEnumerator projectileLifeTime(GameObject projectile)
     {
@@ -118,7 +121,17 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
     }
     private void fireProjectileFX()
     {
-        pistolFireSFX.Play();
+        if(pistolFireSFX.loop)
+        {
+            if(!pistolFireSFX.isPlaying)
+            {
+                pistolFireSFX.Play();
+            }
+        }
+        else
+        {
+            pistolFireSFX.Play();
+        }
         GetComponent<Animator>().SetTrigger("recoil");
         StartCoroutine(GameObject.FindGameObjectWithTag("MainCamera").GetComponent<BasicCamera>().Shake(shakeIntensity, shakeDuration, 0.001f));
         StartCoroutine(muzzleFlashFX());

@@ -67,6 +67,8 @@ public class BasePlayerHealth : MonoBehaviour
         GetComponent<BoxCollider2D>().enabled = false;
         GetComponent<BasePlayerMovement>().enabled = false;
         transform.GetChild(0).gameObject.SetActive(false);
+        transform.GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(2).gameObject.SetActive(false);
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

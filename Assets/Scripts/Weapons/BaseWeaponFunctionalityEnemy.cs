@@ -24,6 +24,7 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
 
     private void Awake()
     {
+        /*
         if (transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.CompareTag("muzzleFlash"))
         {
             muzzleFlash = transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
@@ -32,6 +33,7 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
         {
             bulletTrail = transform.GetChild(2).gameObject.transform.GetChild(0).gameObject;
         }
+        */
     }
     private void Update()
     {
@@ -51,6 +53,10 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
             fireProjectileLogic();
             yield return new WaitForSeconds((1 / fireRate) + Random.Range(-0.5f * (1 / fireRate), 0.5f * (1 / fireRate)));
         }
+        if (pistolFireSFX.loop)
+        {
+            pistolFireSFX.Stop();
+        }
         isFiring = false;
     }
     private void fireProjectileLogic()
@@ -59,6 +65,10 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
         calculateProjectilePositionAndRotation();
         projectileClone = Instantiate(projectile, projectileSpawnPos, initialProjectileRotation);
         projectileClone.GetComponent<Rigidbody2D>().AddForce((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
+        if(projectileClone.GetComponent<Animator>() != null)
+        {
+            projectileClone.GetComponent<Animator>().SetTrigger("enemyProjectile");
+        }
         StartCoroutine(projectileLifeTime(projectileClone));
     }
     private void calculateProjectilePositionAndRotation()
@@ -73,7 +83,17 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
     }
     private void fireProjectileFX()
     {
-        pistolFireSFX.Play();
+        if (pistolFireSFX.loop)
+        {
+            if (!pistolFireSFX.isPlaying)
+            {
+                pistolFireSFX.Play();
+            }
+        }
+        else
+        {
+            pistolFireSFX.Play();
+        }
         GetComponent<Animator>().SetTrigger("recoil");
         StartCoroutine(muzzleFlashFX());
         StartCoroutine(bulletTrailFX());

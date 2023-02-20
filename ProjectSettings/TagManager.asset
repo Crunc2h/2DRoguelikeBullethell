@@ -5,14 +5,15 @@ TagManager:
   serializedVersion: 2
   tags:
   - Wall
-  - WeaponRotationOrigin
-  - projectile
   - weapon
   - projectileSpawnPoint
   - muzzleFlash
   - bulletTrail
   - reloadTimer
   - Mob
+  - playerProjectile
+  - enemyProjectile
+  - projectile
   layers:
   - Default
   - TransparentFX

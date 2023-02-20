@@ -4,22 +4,31 @@ using UnityEngine;
 
 public class ProjectileCollisionTrigger : MonoBehaviour
 {
-    public bool projectileCollision = false;
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Mob"))
+        if(gameObject.CompareTag("enemyProjectile"))
         {
-            if(collision.gameObject.CompareTag("Player"))
+            if (collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Player"))
             {
-                collision.gameObject.GetComponent<BasePlayerHealth>().TakeDamage();
+                Debug.Log("hell0");
+                if (collision.gameObject.CompareTag("Player"))
+                {
+                    Debug.Log("hell1");
+                    collision.gameObject.GetComponent<BasePlayerHealth>().TakeDamage();
+                }
+                Destroy(gameObject);
             }
-            if(collision.gameObject.CompareTag("Mob"))
+        }
+        else if(gameObject.CompareTag("playerProjectile"))
+        {
+            if (collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Mob"))
             {
-                collision.gameObject.GetComponent<BaseEnemyHealth>().TakeDamage();
+                if (collision.gameObject.CompareTag("Mob"))
+                {
+                    collision.gameObject.GetComponent<BaseEnemyHealth>().TakeDamage();
+                }
+                Destroy(gameObject);
             }
-            Destroy(gameObject);
         }
     }
-
 }
