@@ -194,6 +194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 15
+  weaponAngle: 0
 --- !u!50 &5488864086591191318
 Rigidbody2D:
   serializedVersion: 4
