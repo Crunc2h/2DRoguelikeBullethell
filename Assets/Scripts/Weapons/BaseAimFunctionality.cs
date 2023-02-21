@@ -72,6 +72,8 @@ public class BaseAimFunctionality : MonoBehaviour
             targetWorldPosition = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
             weaponAimDirection = (targetWorldPosition - (Vector2)transform.position).normalized;
             weaponRotationAngle = Mathf.Atan2(weaponAimDirection.y, weaponAimDirection.x) * Mathf.Rad2Deg;
+            GetComponent<BasePlayerMovement>().weaponAngle = weaponRotationAngle;
+            GetComponent<BasePlayerMovement>().CalculateAimDirection();
         }
         else if(gameObject.CompareTag("Mob"))
         {
@@ -81,4 +83,5 @@ public class BaseAimFunctionality : MonoBehaviour
             GetComponentInChildren<BaseWeaponFunctionalityEnemy>().currentWeaponRotation = weaponRotationAngle;
         }
     }
+   
 }

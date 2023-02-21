@@ -363,6 +363,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rifle(enemy)
       objectReference: {fileID: 0}
+    - target: {fileID: 503136450702109061, guid: 3abbe9896cf021242bbe2f75d96a3048, type: 3}
+      propertyPath: m_Volume
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 503136450702109062, guid: 3abbe9896cf021242bbe2f75d96a3048, type: 3}
       propertyPath: accuracy
       value: 1
