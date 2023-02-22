@@ -22,9 +22,9 @@ public class BaseEnemyLogic : MonoBehaviour
     private float distanceToPlayer;
     private float controlChangeDistance = 10f;
     private float dirChangeDur;
-    private bool clearLineOfSight = false;
     private bool manualMovement = false;
     private bool shiftOnCooldown = false;
+    public bool clearLineOfSight = false;
     private void Awake()
     {
         GetComponent<AIDestinationSetter>().target = GameObject.FindGameObjectWithTag("Player").transform;
@@ -34,21 +34,16 @@ public class BaseEnemyLogic : MonoBehaviour
     }
     private void Update()
     {
+        //Universal raycast sight
         enemySight();
         if(gameObject.name == "BasicTurret")
         {
+            //Basic Turret Behavior
             AIvsManualMovementControlManager();
         }
         if(gameObject.name == "SecurityGuard")
         {
-            if(distanceToPlayer < 8f)
-            {
-                GetComponent<AIPath>().maxSpeed = 2;
-            }
-            else
-            {
-                GetComponent<AIPath>().maxSpeed = 5;
-            }
+            SecurityGuardBehavior();
         }
     }
     private void FixedUpdate()
@@ -60,6 +55,18 @@ public class BaseEnemyLogic : MonoBehaviour
                 MovementDirectionChangeManager();
                 Move();
             }
+        }
+    }
+    private void SecurityGuardBehavior()
+    {
+        distanceToPlayer = (transform.position - GameObject.FindGameObjectWithTag("Player").transform.position).magnitude;
+        if (distanceToPlayer < 8f)
+        {
+            GetComponent<AIPath>().maxSpeed = 2;
+        }
+        else
+        {
+            GetComponent<AIPath>().maxSpeed = 5;
         }
     }
     private void AIvsManualMovementControlManager()
@@ -99,8 +106,11 @@ public class BaseEnemyLogic : MonoBehaviour
         
         if (hitPlayer.collider != null && hitObstacle.collider == null)
         {
-            GetComponentInChildren<BaseWeaponFunctionalityEnemy>().fireCommand = true;
-            clearLineOfSight = true;
+            if (gameObject.name == "SecurityGuard" || gameObject.name == "BasicTurret")
+            {
+                GetComponentInChildren<BaseWeaponFunctionalityEnemy>().fireCommand = true;
+            }
+                clearLineOfSight = true;
         }
         else
         {

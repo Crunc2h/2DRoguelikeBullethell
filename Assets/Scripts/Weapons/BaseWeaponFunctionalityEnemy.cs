@@ -60,7 +60,7 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
         }
         isFiring = false;
     }
-    private void fireProjectileLogic()
+    public void fireProjectileLogic()
     {
         fireProjectileFX();
         calculateProjectilePositionAndRotation();

@@ -20,7 +20,7 @@ public class BasePlayerMovement : MonoBehaviour
     private void Update()
     {
         CalculateInputScale();
-        AnimatorTest();
+        //AnimatorTest();
         
     }
     private void FixedUpdate()

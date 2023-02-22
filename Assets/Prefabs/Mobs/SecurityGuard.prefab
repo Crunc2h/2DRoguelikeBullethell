@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f3e5fa65be61f1438d99fa68d003a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raycastRange: 10
+  raycastRange: 8
   movementSpeed: 5
 --- !u!114 &5847503882985908960
 MonoBehaviour:
