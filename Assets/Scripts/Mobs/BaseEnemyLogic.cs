@@ -6,7 +6,8 @@ using Pathfinding;
 public class BaseEnemyLogic : MonoBehaviour
 {
 
-
+    [SerializeField] GameObject basicTurret;
+    
     [Header("Raycast Variables")]
     [SerializeField] private float raycastRange = 10f;
     private RaycastHit2D hitPlayer;
@@ -14,13 +15,16 @@ public class BaseEnemyLogic : MonoBehaviour
     private LayerMask playerLayer;
     private LayerMask obstacleLayer;
     private Vector2 weaponDirection;
+    
+
     [Header("Movement Variables")]
-    [SerializeField] private float movementSpeed = 5f;    
-    private float dirChangeTimer = 0f;
-    private float distanceToPlayer;
-    private float dirChangeDur;
+    [SerializeField] private float movementSpeed = 5f;
     private Rigidbody2D rb;
     private Vector2 movementDirection;
+    private float dirChangeTimer = 0f;
+    private float distanceToPlayer;
+    private float controlChangeDistance = 10f;
+    private float dirChangeDur;
     private bool clearLineOfSight = false;
     private bool manualMovement = false;
     private bool shiftOnCooldown = false;
@@ -38,23 +42,26 @@ public class BaseEnemyLogic : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if(manualMovement)
+        if(gameObject == basicTurret)
         {
-            MovementDirectionChangeManager();
-            Move();
+            if (manualMovement)
+            {
+                MovementDirectionChangeManager();
+                Move();
+            }
         }
     }
     private void AIvsManualMovementControlManager()
     {
         distanceToPlayer = (transform.position - GameObject.FindGameObjectWithTag("Player").transform.position).magnitude;
-        if (distanceToPlayer < 10f && clearLineOfSight && !manualMovement)
+        if (distanceToPlayer < controlChangeDistance && clearLineOfSight && !manualMovement)
         {
             manualMovement = true;
             gameObject.GetComponent<SimpleSmoothModifier>().enabled = false;
             gameObject.GetComponent<AIPath>().enabled = false;
             gameObject.GetComponent<AIDestinationSetter>().enabled = false;
         }
-        else if(!clearLineOfSight || distanceToPlayer > 10f)
+        else if(!clearLineOfSight || distanceToPlayer > controlChangeDistance)
         {
             if(manualMovement && !shiftOnCooldown)
             {
@@ -90,25 +97,34 @@ public class BaseEnemyLogic : MonoBehaviour
             {
                 if (((Vector2)transform.position - hitObstacle.point).magnitude > ((Vector2)transform.position - hitPlayer.point).magnitude)
                 {
-                    GetComponentInChildren<BaseWeaponFunctionalityEnemy>().fireCommand = true;
+                    if(gameObject == basicTurret)
+                    {
+                        GetComponentInChildren<BaseWeaponFunctionalityEnemy>().fireCommand = true;
+                    }
                     clearLineOfSight = true;
                 }
                 else
                 {
-                    GetComponentInChildren<BaseWeaponFunctionalityEnemy>().fireCommand = false;
+                    if(gameObject == basicTurret)
+                    {
+                        GetComponentInChildren<BaseWeaponFunctionalityEnemy>().fireCommand = false;
+                    }
                     clearLineOfSight = false;
                 }
             }
             else
             {
-                GetComponentInChildren<BaseWeaponFunctionalityEnemy>().fireCommand = false;
+                if(gameObject == basicTurret)
+                {
+                    GetComponentInChildren<BaseWeaponFunctionalityEnemy>().fireCommand = false;
+                }
                 clearLineOfSight = false;
             }
         }
 
 
-        
-        //DEBUG
+
+        //DEBUG//DEBUG//DEBUG//DEBUG//DEBUG
         if (hitPlayer.collider != null)
         {
             Debug.DrawLine(transform.position, hitPlayer.point, Color.red);
@@ -116,8 +132,8 @@ public class BaseEnemyLogic : MonoBehaviour
         else
         {
             Debug.DrawLine(transform.position, ((Vector2)transform.position + weaponDirection * raycastRange), Color.green);
-        }        
-        //DEBUG
+        }
+        //DEBUG//DEBUG//DEBUG//DEBUG//DEBUG
         if (hitObstacle.collider != null)
         {
             Debug.DrawLine(transform.position, hitObstacle.point, Color.red);
@@ -126,7 +142,8 @@ public class BaseEnemyLogic : MonoBehaviour
         {
             Debug.DrawLine(transform.position, ((Vector2)transform.position + weaponDirection * raycastRange), Color.green);
         }
-        
+        //DEBUG//DEBUG//DEBUG//DEBUG//DEBUG
+
     }
     private void MovementDirectionChangeManager()
     {
