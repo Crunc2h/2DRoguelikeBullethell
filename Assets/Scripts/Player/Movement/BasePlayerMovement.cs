@@ -8,7 +8,6 @@ public class BasePlayerMovement : MonoBehaviour
     public float weaponAngle;
     private Vector2 inputScale;
     private Rigidbody2D rb;
-    private bool isMoving = false;
     string currentDirection;
 
     private SpriteRenderer spriteRen;
@@ -32,11 +31,11 @@ public class BasePlayerMovement : MonoBehaviour
         inputScale = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         if(inputScale.x != 0 || inputScale.y != 0)
         {
-            isMoving = true;
+            GetComponent<Animator>().SetBool("isMoving", true);
         }
         else
         {
-            isMoving = false;
+            GetComponent<Animator>().SetBool("isMoving", false);
         }
     }
     private void Move()
@@ -49,29 +48,40 @@ public class BasePlayerMovement : MonoBehaviour
         if(weaponAngle <= -60f && weaponAngle >= -120f)
         {
             currentDirection = "south";
+            GetComponent<Animator>().SetInteger("direction", 5);
         }
         else if(weaponAngle <= -120f && weaponAngle >= -180f || weaponAngle >= 160f && weaponAngle <= 180f)
         {
             currentDirection = "west";
+            GetComponent<SpriteRenderer>().flipX
+            GetComponent<Animator>().SetInteger("direction", 4);
         }
         else if(weaponAngle < 160f && weaponAngle >= 100f)
         {
             currentDirection = "northwest";
+            GetComponent<Animator>().SetInteger("direction", 3);
         }
         else if(weaponAngle < 100f && weaponAngle >= 80f)
         {
             currentDirection = "north";
+            GetComponent<Animator>().SetInteger("direction", 2);
         }
         else if(weaponAngle < 80f && weaponAngle >= 20f)
         {
             currentDirection = "northeast";
+            GetComponent<Animator>().SetInteger("direction", 1);
         }
         else if(weaponAngle < 20f && weaponAngle >= 0f || weaponAngle < 0f && weaponAngle > -60f)
         {
             currentDirection = "east";
+            if (transform.localScale.x < 0)
+            {
+                transform.localScale = new Vector3(transform.localScale.x * (-1), transform.localScale.y, transform.localScale.z);
+            }
+            GetComponent<Animator>().SetInteger("direction", 0);
         }
     }
-
+    /*
     private void AnimatorTest()
     {
         switch(currentDirection)
@@ -155,5 +165,5 @@ public class BasePlayerMovement : MonoBehaviour
 
         }
     }
-
+    */
 }
