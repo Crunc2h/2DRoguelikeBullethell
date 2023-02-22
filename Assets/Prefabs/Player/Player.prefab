@@ -254,7 +254,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   maxHeartCount: 5
-  currentHealth: 5
+  currentHealth: 100000
   isDead: 0
 --- !u!1 &5488864087045706307
 GameObject:

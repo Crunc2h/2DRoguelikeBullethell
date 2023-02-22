@@ -5,9 +5,6 @@ using Pathfinding;
 
 public class BaseEnemyLogic : MonoBehaviour
 {
-
-    [SerializeField] GameObject basicTurret;
-    
     [Header("Raycast Variables")]
     [SerializeField] private float raycastRange = 10f;
     private RaycastHit2D hitPlayer;
@@ -38,11 +35,25 @@ public class BaseEnemyLogic : MonoBehaviour
     private void Update()
     {
         enemySight();
-        AIvsManualMovementControlManager();
+        if(gameObject.name == "BasicTurret")
+        {
+            AIvsManualMovementControlManager();
+        }
+        if(gameObject.name == "SecurityGuard")
+        {
+            if(distanceToPlayer < 8f)
+            {
+                GetComponent<AIPath>().maxSpeed = 2;
+            }
+            else
+            {
+                GetComponent<AIPath>().maxSpeed = 5;
+            }
+        }
     }
     private void FixedUpdate()
     {
-        if(gameObject == basicTurret)
+        if(gameObject.name == "BasicTurret")
         {
             if (manualMovement)
             {
@@ -97,7 +108,7 @@ public class BaseEnemyLogic : MonoBehaviour
             {
                 if (((Vector2)transform.position - hitObstacle.point).magnitude > ((Vector2)transform.position - hitPlayer.point).magnitude)
                 {
-                    if(gameObject == basicTurret)
+                    if(gameObject.name == "SecurityGuard" || gameObject.name == "BasicTurret")
                     {
                         GetComponentInChildren<BaseWeaponFunctionalityEnemy>().fireCommand = true;
                     }
@@ -105,7 +116,7 @@ public class BaseEnemyLogic : MonoBehaviour
                 }
                 else
                 {
-                    if(gameObject == basicTurret)
+                    if(gameObject.name == "SecurityGuard" || gameObject.name == "BasicTurret")
                     {
                         GetComponentInChildren<BaseWeaponFunctionalityEnemy>().fireCommand = false;
                     }
@@ -114,7 +125,7 @@ public class BaseEnemyLogic : MonoBehaviour
             }
             else
             {
-                if(gameObject == basicTurret)
+                if(gameObject.name == "SecurityGuard" || gameObject.name == "BasicTurret")
                 {
                     GetComponentInChildren<BaseWeaponFunctionalityEnemy>().fireCommand = false;
                 }

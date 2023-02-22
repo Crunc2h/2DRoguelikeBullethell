@@ -10,6 +10,7 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
     [SerializeField] private float projectileLifetime = 2f;
     [SerializeField] private float fireRate = 3f;
     [SerializeField] private float accuracy = 1f;
+    [SerializeField] private float randomizedShootingRateRange = 0.5f;
 
     [Header("SFX")]
     [SerializeField] private AudioSource pistolFireSFX;
@@ -51,7 +52,7 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
         while (fireCommand)
         {
             fireProjectileLogic();
-            yield return new WaitForSeconds((1 / fireRate) + Random.Range(-0.5f * (1 / fireRate), 0.5f * (1 / fireRate)));
+            yield return new WaitForSeconds((1 / fireRate) + Random.Range(-randomizedShootingRateRange * (1 / fireRate), randomizedShootingRateRange * (1 / fireRate)));
         }
         if (pistolFireSFX.loop)
         {
@@ -65,11 +66,11 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
         calculateProjectilePositionAndRotation();
         projectileClone = Instantiate(projectile, projectileSpawnPos, initialProjectileRotation);
         projectileClone.GetComponent<Rigidbody2D>().AddForce((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
-        if(projectileClone.GetComponent<Animator>() != null)
+        StartCoroutine(projectileLifeTime(projectileClone));
+        if (projectileClone.GetComponent<Animator>() != null)
         {
             projectileClone.GetComponent<Animator>().SetTrigger("enemyProjectile");
         }
-        StartCoroutine(projectileLifeTime(projectileClone));
     }
     private void calculateProjectilePositionAndRotation()
     {

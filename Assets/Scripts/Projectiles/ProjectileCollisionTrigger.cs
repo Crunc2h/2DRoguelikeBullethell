@@ -10,10 +10,8 @@ public class ProjectileCollisionTrigger : MonoBehaviour
         {
             if (collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Player"))
             {
-                Debug.Log("hell0");
                 if (collision.gameObject.CompareTag("Player"))
                 {
-                    Debug.Log("hell1");
                     collision.gameObject.GetComponent<BasePlayerHealth>().TakeDamage();
                 }
                 Destroy(gameObject);

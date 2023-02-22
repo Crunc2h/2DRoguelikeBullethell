@@ -30,38 +30,63 @@ public class BaseAimFunctionality : MonoBehaviour
     private void SetWeaponRotation()
     {
         CalculateWeaponRotationAngleNTargetPosition();
-        if(weaponRotationAngle >= -90f && weaponRotationAngle <= 90f)
+        if(gameObject.CompareTag("Player") || gameObject.name == "SecurityGuard")
         {
-            weaponSlotOne.transform.localRotation = Quaternion.Euler(0f, 0f, weaponRotationAngle);           
-            if(weapon.transform.parent.gameObject != weaponSlotOne)
+            if (weaponRotationAngle >= -90f && weaponRotationAngle <= 90f)
             {
-                weapon.transform.SetParent(weaponSlotOne.transform, false);
-            }      
-            if(weaponRotationAngle <= 90f && weaponRotationAngle >= 0f)
-            {
-                weapon.GetComponent<SpriteRenderer>().sortingOrder = 0;
+                weaponSlotOne.transform.localRotation = Quaternion.Euler(0f, 0f, weaponRotationAngle);
+                if (weapon.transform.parent.gameObject != weaponSlotOne)
+                {
+                    weapon.transform.SetParent(weaponSlotOne.transform, false);
+                }
+                if (weaponRotationAngle <= 90f && weaponRotationAngle >= 0f)
+                {
+                    weapon.GetComponent<SpriteRenderer>().sortingOrder = 0;
+                }
+                else if (weaponRotationAngle < 0f && weaponRotationAngle >= -90f)
+                {
+                    weapon.GetComponent<SpriteRenderer>().sortingOrder = 2;
+                }
             }
-            else if(weaponRotationAngle < 0f && weaponRotationAngle >= -90f)
+            else if (weaponRotationAngle > 90f || weaponRotationAngle < -90f)
             {
-                weapon.GetComponent<SpriteRenderer>().sortingOrder = 2;
+                weaponSlotTwo.transform.localRotation = Quaternion.Euler(180f, 0f, -weaponRotationAngle);
+                if (weapon.transform.parent.gameObject != weaponSlotTwo)
+                {
+                    weapon.transform.SetParent(weaponSlotTwo.transform, false);
+                }
+                if (weaponRotationAngle > 90f && weaponRotationAngle <= 180f)
+                {
+                    weapon.GetComponent<SpriteRenderer>().sortingOrder = 0;
+                }
+                else if (weaponRotationAngle >= -180f && weaponRotationAngle < -90f)
+                {
+                    weapon.GetComponent<SpriteRenderer>().sortingOrder = 2;
+                }
             }
         }
-        else if(weaponRotationAngle > 90f || weaponRotationAngle < -90f)
+        else if(gameObject.name == "BasicTurret")
         {
-            weaponSlotTwo.transform.localRotation = Quaternion.Euler(180f, 0f, -weaponRotationAngle);          
-            if (weapon.transform.parent.gameObject != weaponSlotTwo)
+            if(weaponRotationAngle >= -180f && weaponRotationAngle <= 0f)
             {
-                weapon.transform.SetParent(weaponSlotTwo.transform, false);
-            }
-            if(weaponRotationAngle > 90f && weaponRotationAngle <= 180f)
-            {
-                weapon.GetComponent<SpriteRenderer>().sortingOrder = 0;
-            }
-            else if(weaponRotationAngle >= -180f && weaponRotationAngle < -90f)
-            {
+                weaponSlotOne.transform.localRotation = Quaternion.Euler(0f, 0f, weaponRotationAngle);
                 weapon.GetComponent<SpriteRenderer>().sortingOrder = 2;
+                if (weapon.transform.parent.gameObject != weaponSlotOne)
+                {
+                    weapon.transform.SetParent(weaponSlotOne.transform, false);
+                }
+            }
+            else
+            {
+                weaponSlotTwo.transform.localRotation = Quaternion.Euler(180f, 0f, -weaponRotationAngle);
+                weapon.GetComponent<SpriteRenderer>().sortingOrder = 0;
+                if (weapon.transform.parent.gameObject != weaponSlotTwo)
+                {
+                    weapon.transform.SetParent(weaponSlotTwo.transform, false);
+                }
             }
         }
+        
 
 
     }
