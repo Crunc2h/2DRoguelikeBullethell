@@ -8,7 +8,7 @@ public class BaseAimFunctionality : MonoBehaviour
     public float weaponRotationAngle = 0f;
     private GameObject weaponSlotOne;
     private GameObject weaponSlotTwo;
-    private GameObject weapon;
+    public GameObject weapon;
     private Renderer weaponSpriteRenderer;
     private void Awake()
     {
@@ -65,7 +65,7 @@ public class BaseAimFunctionality : MonoBehaviour
                 }
             }
         }
-        else if(gameObject.name == "BasicTurret")
+        else if(gameObject.name == "BasicTurret" || gameObject.name == "InvisibleSniperTurret")
         {
             if(weaponRotationAngle >= -180f && weaponRotationAngle <= 0f)
             {

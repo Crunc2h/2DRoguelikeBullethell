@@ -53,7 +53,7 @@ public class BasePlayerMovement : MonoBehaviour
         else if(weaponAngle <= -120f && weaponAngle >= -180f || weaponAngle >= 160f && weaponAngle <= 180f)
         {
             currentDirection = "west";
-            GetComponent<SpriteRenderer>().flipX
+            //GetComponent<SpriteRenderer>().flipX
             GetComponent<Animator>().SetInteger("direction", 4);
         }
         else if(weaponAngle < 160f && weaponAngle >= 100f)

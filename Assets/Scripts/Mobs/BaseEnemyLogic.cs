@@ -7,8 +7,8 @@ public class BaseEnemyLogic : MonoBehaviour
 {
     [Header("Raycast Variables")]
     [SerializeField] private float raycastRange = 10f;
-    private RaycastHit2D hitPlayer;
-    private RaycastHit2D hitObstacle;
+    public RaycastHit2D hitPlayer;
+    public RaycastHit2D hitObstacle;
     private LayerMask playerLayer;
     private LayerMask obstacleLayer;
     private Vector2 weaponDirection;
@@ -34,7 +34,6 @@ public class BaseEnemyLogic : MonoBehaviour
     }
     private void Update()
     {
-        //Universal raycast sight
         enemySight();
         if(gameObject.name == "BasicTurret")
         {

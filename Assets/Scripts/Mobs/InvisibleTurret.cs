@@ -5,35 +5,47 @@ using Pathfinding;
 
 public class InvisibleTurret : MonoBehaviour
 {
-    //Spawn in a randomized point within a certain area and away from the player for at least the specified distance
-    //If said point is on a wall or an obstacle, move it to the closest point to the player
+    private LineRenderer lineRendererComp;
     private LayerMask obstacleLayer;
     private RaycastHit2D collisionCheck;
     private Vector3 spawnPoint;
     private Vector3 playerPos;
     private bool lineOfSight = false;
     private bool isCharging = false;
-    int counter = 0;
-    //inactivation
-    //define spawn area
-    //define spawning point
-    //activation
+    private bool activateLaser = false;
+
     private void Awake()
     {
         obstacleLayer = LayerMask.GetMask("Obstacle");
+        lineRendererComp = GetComponent<LineRenderer>();
+        lineRendererComp.positionCount = 2;
     }
     private void Update()
     {
-        lineOfSight = GetComponent<BaseEnemyLogic>().clearLineOfSight;
-        Debug.Log(lineOfSight);
-        playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
-        
-        if(lineOfSight)
+        SniperTurretBehaviorManager();
+        RenderLaser();
+    }
+
+    private void RenderLaser()
+    {
+        if (activateLaser)
         {
-            if(!isCharging)
+            lineRendererComp.enabled = true;
+
+            if (lineOfSight)
             {
-                StartCoroutine(SniperTurretBehavior());
+                lineRendererComp.SetPosition(0, GetComponent<BaseAimFunctionality>().weapon.transform.GetChild(0).gameObject.transform.position);
+                lineRendererComp.SetPosition(1, playerPos);
             }
+            else
+            {
+                lineRendererComp.SetPosition(0, GetComponent<BaseAimFunctionality>().weapon.transform.GetChild(0).gameObject.transform.position);
+                lineRendererComp.SetPosition(1, new Vector3(GetComponent<BaseEnemyLogic>().hitObstacle.point.x, GetComponent<BaseEnemyLogic>().hitObstacle.point.y, -1));
+            }
+        }
+        else
+        {
+            lineRendererComp.enabled = false;
         }
     }
     private void CalculateSpawningPoint()
@@ -43,7 +55,6 @@ public class InvisibleTurret : MonoBehaviour
             spawnPoint = new Vector3(playerPos.x + Random.Range(-30f, 30f), playerPos.y + Random.Range(-30f, 30f), 0f);
         } while ((playerPos - spawnPoint).magnitude < 15f || CollisionCheck(spawnPoint) == true);
         gameObject.transform.position = spawnPoint;
-        GetComponent<AIPath>().canMove = true;
     }
     private bool CollisionCheck(Vector3 spawnPoint)
     {
@@ -57,21 +68,37 @@ public class InvisibleTurret : MonoBehaviour
             return false;
         }
     }
-
+    private void SniperTurretBehaviorManager()
+    {
+        lineOfSight = GetComponent<BaseEnemyLogic>().clearLineOfSight;
+        playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
+        if (lineOfSight)
+        {
+            if (!isCharging)
+            {
+                StartCoroutine(SniperTurretBehavior());
+            }
+        }
+    }
     private IEnumerator SniperTurretBehavior()
     {
         isCharging = true;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.25f);
         gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        GetComponent<BaseAimFunctionality>().weapon.GetComponent<SpriteRenderer>().enabled = true;
         gameObject.GetComponent<BoxCollider2D>().enabled = true;
         GetComponent<AIPath>().canMove = false;
+        activateLaser = true;
         yield return new WaitForSeconds(2f);
         GetComponentInChildren<BaseWeaponFunctionalityEnemy>().fireProjectileLogic();
+        activateLaser = false;
         yield return new WaitForSeconds(1f);
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        GetComponent<BaseAimFunctionality>().weapon.GetComponent<SpriteRenderer>().enabled = false;
         gameObject.GetComponent<BoxCollider2D>().enabled = false;
         CalculateSpawningPoint();
         yield return new WaitForSeconds(3f);
+        GetComponent<AIPath>().canMove = true;
         isCharging = false;
     }
 }   

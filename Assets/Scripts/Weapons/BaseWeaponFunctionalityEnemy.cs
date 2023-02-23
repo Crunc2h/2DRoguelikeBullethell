@@ -19,7 +19,7 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
     private GameObject bulletTrail;
     public float currentWeaponRotation;
     private Quaternion initialProjectileRotation;
-    private Vector3 projectileSpawnPos;
+    public Vector3 projectileSpawnPos;
     public bool fireCommand = false;
     private bool isFiring = false;
 
