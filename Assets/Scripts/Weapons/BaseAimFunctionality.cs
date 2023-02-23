@@ -9,7 +9,7 @@ public class BaseAimFunctionality : MonoBehaviour
     private GameObject weaponSlotOne;
     private GameObject weaponSlotTwo;
     public GameObject weapon;
-    private Renderer weaponSpriteRenderer;
+
     private void Awake()
     {
         weaponSlotOne = transform.GetChild(0).gameObject;
