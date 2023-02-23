@@ -7,6 +7,7 @@ public class BaseEnemyLogic : MonoBehaviour
 {
     [Header("Raycast Variables")]
     [SerializeField] private float raycastRange = 10f;
+    private RaycastHit2D collisionCheck;
     public RaycastHit2D hitPlayer;
     public RaycastHit2D hitObstacle;
     private LayerMask playerLayer;
@@ -18,10 +19,11 @@ public class BaseEnemyLogic : MonoBehaviour
     [SerializeField] private float movementSpeed = 5f;
     private Rigidbody2D rb;
     private Vector2 movementDirection;
+    private Vector3 nextPosition;
     private float dirChangeTimer = 0f;
     private float distanceToPlayer;
     private float controlChangeDistance = 10f;
-    private float dirChangeDur;
+    private float dirChangeDur = 0.3f;
     private bool manualMovement = false;
     private bool shiftOnCooldown = false;
     public bool clearLineOfSight = false;
@@ -171,16 +173,47 @@ public class BaseEnemyLogic : MonoBehaviour
         if (dirChangeTimer >= dirChangeDur)
         {
             dirChangeTimer = 0f;
-            dirChangeDur = Random.Range(0.5f, 2f);
+            dirChangeDur = Random.Range(0.1f, 0.8f);
             CalculateMovementDirection();
         }
     }
     private void CalculateMovementDirection()
     {
-        movementDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+        if(distanceToPlayer > 3f)
+        {
+            do
+            {
+                movementDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+                nextPosition = (Vector2)transform.position + movementDirection * movementSpeed;
+            } while ((nextPosition - GameObject.FindGameObjectWithTag("Player").transform.position).magnitude >
+                (transform.position - GameObject.FindGameObjectWithTag("Player").transform.position).magnitude + 3f || CollisionCheck(nextPosition) == true
+                || (transform.position - nextPosition).magnitude < 3f);
+        }
+        else
+        {
+            do
+            {
+                movementDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+                nextPosition = (Vector2)transform.position + movementDirection * movementSpeed;
+            } while ((nextPosition - GameObject.FindGameObjectWithTag("Player").transform.position).magnitude < 3f || CollisionCheck(nextPosition) == true);
+        }
+
     }
     private void Move()
     {
         rb.MovePosition((Vector2)transform.position + movementDirection * movementSpeed * Time.fixedDeltaTime);
+    }
+
+    private bool CollisionCheck(Vector3 spawnPoint)
+    {
+        collisionCheck = Physics2D.Raycast((Vector2)spawnPoint, Vector2.right, 0.1f, obstacleLayer);
+        if (collisionCheck.collider != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

@@ -155,7 +155,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   raycastRange: 10
-  movementSpeed: 5
+  movementSpeed: 3
+  clearLineOfSight: 0
 --- !u!114 &3884910625656683458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,6 +184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponAimDirection: {x: 0, y: 0}
   weaponRotationAngle: 0
+  weapon: {fileID: 0}
 --- !u!114 &3598320060030436720
 MonoBehaviour:
   m_ObjectHideFlags: 0
