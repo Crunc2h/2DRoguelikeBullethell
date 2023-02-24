@@ -14,51 +14,33 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
 
     [Header("SFX")]
     [SerializeField] private AudioSource pistolFireSFX;
+    
     private GameObject projectileClone;
     private GameObject muzzleFlash;
     private GameObject bulletTrail;
-    public float currentWeaponRotation;
     private Quaternion initialProjectileRotation;
     public Vector3 projectileSpawnPos;
+    public float currentWeaponRotation;
     public bool fireCommand = false;
     private bool isFiring = false;
 
     private void Awake()
     {
-        /*
-        if (transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.CompareTag("muzzleFlash"))
-        {
-            muzzleFlash = transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
-        }
-        if (transform.GetChild(2).gameObject.transform.GetChild(0).gameObject.CompareTag("bulletTrail"))
-        {
-            bulletTrail = transform.GetChild(2).gameObject.transform.GetChild(0).gameObject;
-        }
-        */
+        Definitions();       
     }
     private void Update()
     {
-        if(fireCommand)
+        FiringManager();
+    }
+    private void FiringManager()
+    {
+        if (fireCommand)
         {
-            if(!isFiring)
+            if (!isFiring)
             {
                 StartCoroutine(automaticFiring());
             }
         }
-    }
-    private IEnumerator automaticFiring()
-    {
-        isFiring = true;
-        while (fireCommand)
-        {
-            fireProjectileLogic();
-            yield return new WaitForSeconds((1 / fireRate) + Random.Range(-randomizedShootingRateRange * (1 / fireRate), randomizedShootingRateRange * (1 / fireRate)));
-        }
-        if (pistolFireSFX.loop)
-        {
-            pistolFireSFX.Stop();
-        }
-        isFiring = false;
     }
     public void fireProjectileLogic()
     {
@@ -77,11 +59,6 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
         projectileSpawnPos = transform.GetChild(0).gameObject.transform.position;
         initialProjectileRotation = Quaternion.Euler(0f, 0f, currentWeaponRotation + Random.Range(-20f, 20f) * (1 / accuracy));
     }
-    private IEnumerator projectileLifeTime(GameObject projectile)
-    {
-        yield return new WaitForSeconds(projectileLifetime);
-        Destroy(projectile);
-    }
     private void fireProjectileFX()
     {
         if (pistolFireSFX.loop)
@@ -99,7 +76,25 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
         StartCoroutine(muzzleFlashFX());
         StartCoroutine(bulletTrailFX());
     }
-
+    private IEnumerator automaticFiring()
+    {
+        isFiring = true;
+        while (fireCommand)
+        {
+            fireProjectileLogic();
+            yield return new WaitForSeconds((1 / fireRate) + Random.Range(-randomizedShootingRateRange * (1 / fireRate), randomizedShootingRateRange * (1 / fireRate)));
+        }
+        if (pistolFireSFX.loop)
+        {
+            pistolFireSFX.Stop();
+        }
+        isFiring = false;
+    }
+    private IEnumerator projectileLifeTime(GameObject projectile)
+    {
+        yield return new WaitForSeconds(projectileLifetime);
+        Destroy(projectile);
+    }
     private IEnumerator muzzleFlashFX()
     {
         if(muzzleFlash != null)
@@ -116,6 +111,21 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
             bulletTrail.GetComponent<SpriteRenderer>().enabled = true;
             yield return new WaitForSeconds(0.05f);
             bulletTrail.GetComponent<SpriteRenderer>().enabled = false;
+        }
+    }
+    private void Definitions()
+    {
+        Transform[] childComponents = GetComponentsInChildren<Transform>();
+        for(int i = 0; i < childComponents.Length; i++)
+        {
+            if(childComponents[i].gameObject.name == "muzzleFlash")
+            {
+                muzzleFlash = childComponents[i].gameObject;
+            }
+            else if (childComponents[i].gameObject.name == "bulletTrail")
+            {
+                muzzleFlash = childComponents[i].gameObject;
+            }
         }
     }
 }

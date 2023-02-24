@@ -3,25 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 public class BaseAimFunctionality : MonoBehaviour
 {
-    private Vector2 targetWorldPosition;
+    public GameObject weapon;
     public Vector2 weaponAimDirection;
     public float weaponRotationAngle = 0f;
     private GameObject weaponSlotOne;
     private GameObject weaponSlotTwo;
-    public GameObject weapon;
-
+    private Vector2 targetWorldPosition;
     private void Awake()
     {
-        weaponSlotOne = transform.GetChild(0).gameObject;
-        weaponSlotTwo = transform.GetChild(1).gameObject;
-        if(weaponSlotOne.transform.GetChild(0) != null)
-        {
-            weapon = weaponSlotOne.transform.GetChild(0).gameObject;
-        }
-        else
-        {
-            weapon = weaponSlotTwo.transform.GetChild(0).gameObject;
-        }
+        Definitions();
     }
     private void FixedUpdate()
     {
@@ -86,9 +76,6 @@ public class BaseAimFunctionality : MonoBehaviour
                 }
             }
         }
-        
-
-
     }
     private void CalculateWeaponRotationAngleNTargetPosition()
     {
@@ -106,6 +93,22 @@ public class BaseAimFunctionality : MonoBehaviour
             weaponAimDirection = (targetWorldPosition - (Vector2)transform.position).normalized;
             weaponRotationAngle = Mathf.Atan2(weaponAimDirection.y, weaponAimDirection.x) * Mathf.Rad2Deg;
             GetComponentInChildren<BaseWeaponFunctionalityEnemy>().currentWeaponRotation = weaponRotationAngle;
+        }
+    }
+    private void Definitions()
+    {
+        weaponSlotOne = transform.GetChild(0).gameObject;
+        weaponSlotTwo = transform.GetChild(1).gameObject;
+        if (GetComponentInChildren<BaseWeaponFunctionalityPlayer>() != null || GetComponentInChildren<BaseWeaponFunctionalityEnemy>() != null)
+        {
+            if (GetComponentInChildren<BaseWeaponFunctionalityPlayer>() != null)
+            {
+                weapon = GetComponentInChildren<BaseWeaponFunctionalityPlayer>().gameObject;
+            }
+            else
+            {
+                weapon = GetComponentInChildren<BaseWeaponFunctionalityEnemy>().gameObject;
+            }
         }
     }
    

@@ -32,38 +32,29 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
 
     private void Awake()
     {
-        if(GameObject.FindGameObjectWithTag("reloadTimer"))
-        {
-            reloadTimer = GameObject.FindGameObjectWithTag("reloadTimer");
-        }
-        /*
-        if (transform.GetChild(1).gameObject.transform.GetChild(0).gameObject != null)
-        {
-            muzzleFlash = transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
-        }
-        if (transform.GetChild(2).gameObject.transform.GetChild(0).gameObject != null)
-        {
-            bulletTrail = transform.GetChild(2).gameObject.transform.GetChild(0).gameObject;
-        }
-        */
+        Definitions();
     }
     private void Update()
+    {
+        ListenForPlayerInput();
+    }
+    private void ListenForPlayerInput()
     {
         if (Input.GetMouseButtonDown(0))
         {
             lmbDown = true;
-            if(isReloading)
+            if (isReloading)
             {
                 emptySFX.Play();
             }
-            if(!isFiring)
+            if (!isFiring)
             {
                 StartCoroutine(automaticFiring());
             }
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            if(pistolFireSFX.loop)
+            if (pistolFireSFX.loop)
             {
                 pistolFireSFX.Stop();
             }
@@ -74,28 +65,25 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
             StartCoroutine(reloadLogic());
         }
     }
-    private IEnumerator automaticFiring()
-    {
-        isFiring = true;
-        while(lmbDown && !isReloading)
-        {
-            fireProjectileLogic();
-            yield return new WaitForSeconds(1 / fireRate);
-        }
-        isFiring= false;
-    }
     private void fireProjectileLogic()
     {
         fireProjectileFX();
+        
+        //Spawn projectile and add force to it
         calculateProjectilePositionAndRotation();
         projectileClone = Instantiate(projectile, projectileSpawnPos, initialProjectileRotation);
         projectileClone.GetComponent<Rigidbody2D>().AddForce((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
+        
+        //Checks and plays if projectile has a spawn animation
         if(projectileClone.GetComponent<Animator>() != null)
         {
             projectileClone.GetComponent<Animator>().SetTrigger("playerProjectile");
         }
+        
         StartCoroutine(projectileLifeTime(projectileClone));
         currentAmmo--;
+        
+        //Automatic reload
         if (currentAmmo <= 0)
         {
             StartCoroutine(reloadLogic());
@@ -104,23 +92,12 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
     private void calculateProjectilePositionAndRotation()
     {
         projectileSpawnPos = transform.GetChild(0).gameObject.transform.position;
-        initialProjectileRotation = Quaternion.Euler(0f, 0f, GameObject.FindGameObjectWithTag("Player").GetComponent<BaseAimFunctionality>().weaponRotationAngle + Random.Range(-30f, 30f) * (1 / accuracy));
-    }
-    private IEnumerator projectileLifeTime(GameObject projectile)
-    {
-        yield return new WaitForSeconds(projectileLifetime);
-        Destroy(projectile);
-    }
-    private IEnumerator reloadLogic()
-    {
-        isReloading = true;
-        StartCoroutine(reloadFX());
-        yield return new WaitForSeconds(reloadDuration);
-        currentAmmo = maxAmmo;
-        isReloading = false;
+        initialProjectileRotation = Quaternion.Euler(0f, 0f, GameObject.FindGameObjectWithTag("Player").GetComponent<BaseAimFunctionality>().weaponRotationAngle 
+            + Random.Range(-30f, 30f) * (1 / accuracy));
     }
     private void fireProjectileFX()
     {
+        //Adjust according to sfx being a looping or a single shot mp3
         if(pistolFireSFX.loop)
         {
             if(!pistolFireSFX.isPlaying)
@@ -132,20 +109,55 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
         {
             pistolFireSFX.Play();
         }
+        
+        //Commence animation + other effects
         GetComponent<Animator>().SetTrigger("recoil");
         StartCoroutine(GameObject.FindGameObjectWithTag("MainCamera").GetComponent<BasicCamera>().Shake(shakeIntensity, shakeDuration, 0.001f));
         StartCoroutine(muzzleFlashFX());
         StartCoroutine(bulletTrailFX());
     }
+    private IEnumerator automaticFiring()
+    {
+        isFiring = true;
+
+        while (lmbDown && !isReloading)
+        {
+            fireProjectileLogic();
+            yield return new WaitForSeconds(1 / fireRate);
+        }
+
+        isFiring = false;
+    }
+    private IEnumerator projectileLifeTime(GameObject projectile)
+    {
+        yield return new WaitForSeconds(projectileLifetime);
+        Destroy(projectile);
+    }
+    private IEnumerator reloadLogic()
+    {
+        isReloading = true;
+
+        StartCoroutine(reloadFX());
+        yield return new WaitForSeconds(reloadDuration);
+        currentAmmo = maxAmmo;
+
+        isReloading = false;
+    }
     private IEnumerator reloadFX()
     {
         reloadSFX.Play();
+        
+        //Enable reload timer sprites
         reloadTimer.GetComponent<SpriteRenderer>().enabled = true;
         reloadTimer.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().enabled = true;
         reloadTimer.transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>().enabled = true;
         reloadTimer.transform.GetChild(2).gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        
+        //Reload animation
         reloadTimer.GetComponent<Animator>().SetTrigger("reload");
         yield return new WaitForSeconds(reloadDuration);
+        
+        //Disable reload timer sprites
         reloadTimer.GetComponent<SpriteRenderer>().enabled = false;
         reloadTimer.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().enabled = false;
         reloadTimer.transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>().enabled = false;
@@ -167,6 +179,25 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
             bulletTrail.GetComponent<SpriteRenderer>().enabled = true;
             yield return new WaitForSeconds(0.05f);
             bulletTrail.GetComponent<SpriteRenderer>().enabled = false;
+        }
+    }
+    private void Definitions()
+    {
+        Transform[] childComponents = GetComponentsInChildren<Transform>();
+        for (int i = 0; i < childComponents.Length; i++)
+        {
+            if (childComponents[i].gameObject.name == "muzzleFlash")
+            {
+                muzzleFlash = childComponents[i].gameObject;
+            }
+            else if (childComponents[i].gameObject.name == "bulletTrail")
+            {
+                muzzleFlash = childComponents[i].gameObject;
+            }
+        }
+        if (GameObject.FindGameObjectWithTag("reloadTimer"))
+        {
+            reloadTimer = GameObject.FindGameObjectWithTag("reloadTimer");
         }
     }
 }

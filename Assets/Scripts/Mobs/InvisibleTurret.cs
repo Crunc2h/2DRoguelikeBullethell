@@ -16,9 +16,7 @@ public class InvisibleTurret : MonoBehaviour
 
     private void Awake()
     {
-        obstacleLayer = LayerMask.GetMask("Obstacle");
-        lineRendererComp = GetComponent<LineRenderer>();
-        lineRendererComp.positionCount = 2;
+        Definitions();
     }
     private void Update()
     {
@@ -83,22 +81,39 @@ public class InvisibleTurret : MonoBehaviour
     private IEnumerator SniperTurretBehavior()
     {
         isCharging = true;
+        
+        //Initial delay
         yield return new WaitForSeconds(0.25f);
+        
+        //Becomes visible and targettable, starts charging
         gameObject.GetComponent<SpriteRenderer>().enabled = true;
         GetComponent<BaseAimFunctionality>().weapon.GetComponent<SpriteRenderer>().enabled = true;
         gameObject.GetComponent<BoxCollider2D>().enabled = true;
         GetComponent<AIPath>().canMove = false;
         activateLaser = true;
+        
+        //Fires the projectile
         yield return new WaitForSeconds(2f);
         GetComponentInChildren<BaseWeaponFunctionalityEnemy>().fireProjectileLogic();
         activateLaser = false;
+        
+        //Becomes invisible and untargettable, teleports to the next spawn point
         yield return new WaitForSeconds(1f);
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
         GetComponent<BaseAimFunctionality>().weapon.GetComponent<SpriteRenderer>().enabled = false;
         gameObject.GetComponent<BoxCollider2D>().enabled = false;
         CalculateSpawningPoint();
+        
+        //Cooldown before starting to chase the player
         yield return new WaitForSeconds(3f);
         GetComponent<AIPath>().canMove = true;
+        
         isCharging = false;
+    }
+    private void Definitions()
+    {
+        obstacleLayer = LayerMask.GetMask("Obstacle");
+        lineRendererComp = GetComponent<LineRenderer>();
+        lineRendererComp.positionCount = 2;
     }
 }   
