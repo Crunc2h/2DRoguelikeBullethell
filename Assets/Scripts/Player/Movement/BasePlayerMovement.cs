@@ -11,18 +11,56 @@ public class BasePlayerMovement : MonoBehaviour
     private SpriteRenderer playerSpriteRend;
     private GameObject weaponSlotOne;
     private GameObject weaponSlotTwo;
-
+    private bool isDashing = false;
+    private float dashDuration = 0.3f;
+    private float dashCooldown = 1f;
     private void Awake()
     {
         Definitions();
     }
     private void Update()
     {
+        ListenForPlayerInput();
+        DashManager();
         CalculateInputScaleNCheckMovement();
     }
     private void FixedUpdate()
     {
-        Move();
+        MoveNDash();
+    }
+    private void ListenForPlayerInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (!isDashing && dashCooldown > 0f)
+            {
+                isDashing = true;
+            }
+        }
+    }
+    private void DashManager()
+    {
+        if(isDashing)
+        {
+            dashCooldown -= Time.unscaledDeltaTime;
+            dashDuration -= Time.unscaledDeltaTime;
+            
+            if(GetComponent<BoxCollider2D>().enabled && dashDuration > 0f)
+            {
+                GetComponent<BoxCollider2D>().enabled = false;
+            }
+            else if(!GetComponent<BoxCollider2D>().enabled && dashDuration <= 0f)
+            {
+                GetComponent<BoxCollider2D>().enabled = true;
+            }
+            
+            if(dashCooldown <= 0f)
+            {
+                dashCooldown = 1f;
+                dashDuration = 0.3f;
+                isDashing = false;
+            }
+        }
     }
     private void CalculateInputScaleNCheckMovement()
     {
@@ -38,9 +76,23 @@ public class BasePlayerMovement : MonoBehaviour
         }
 
     }
-    private void Move()
+    private void MoveNDash()
     {
-        rb.MovePosition((Vector2)transform.position + inputScale * movementSpeed * Time.fixedDeltaTime);
+        if (isDashing)
+        {
+            if (dashDuration > 0f)
+            {
+                rb.MovePosition((Vector2)transform.position + GetComponent<BaseAimFunctionality>().weaponAimDirection * 20f * Time.fixedDeltaTime);
+            }
+            else
+            {
+                rb.MovePosition((Vector2)transform.position + inputScale * movementSpeed * Time.fixedDeltaTime);
+            }
+        }
+        else
+        {
+            rb.MovePosition((Vector2)transform.position + inputScale * movementSpeed * Time.fixedDeltaTime);
+        }
     }
     public void CalculateAimDirection()
     {

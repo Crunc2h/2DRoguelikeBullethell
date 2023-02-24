@@ -35,6 +35,12 @@ public class InvisibleTurret : MonoBehaviour
                 lineRendererComp.SetPosition(0, GetComponent<BaseAimFunctionality>().weapon.transform.GetChild(0).gameObject.transform.position);
                 lineRendererComp.SetPosition(1, playerPos);
             }
+            else if(!lineOfSight && GameObject.FindGameObjectWithTag("Player").GetComponent<BoxCollider2D>().enabled == false)
+            {
+                lineRendererComp.SetPosition(0, GetComponent<BaseAimFunctionality>().weapon.transform.GetChild(0).gameObject.transform.position);
+                lineRendererComp.SetPosition(1, new Vector3(GameObject.FindGameObjectWithTag("Player").transform.position.x,
+                    GameObject.FindGameObjectWithTag("Player").transform.position.y, -1));
+            }
             else
             {
                 lineRendererComp.SetPosition(0, GetComponent<BaseAimFunctionality>().weapon.transform.GetChild(0).gameObject.transform.position);
