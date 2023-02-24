@@ -173,21 +173,20 @@ public class BaseEnemyLogic : MonoBehaviour
         if (dirChangeTimer >= dirChangeDur)
         {
             dirChangeTimer = 0f;
-            dirChangeDur = Random.Range(0.1f, 0.8f);
+            dirChangeDur = Random.Range(0.5f, 0.8f);
             CalculateMovementDirection();
         }
     }
     private void CalculateMovementDirection()
     {
-        if(distanceToPlayer > 3f)
+        if(distanceToPlayer > 5f)
         {
             do
             {
                 movementDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
                 nextPosition = (Vector2)transform.position + movementDirection * movementSpeed;
-            } while ((nextPosition - GameObject.FindGameObjectWithTag("Player").transform.position).magnitude >
-                (transform.position - GameObject.FindGameObjectWithTag("Player").transform.position).magnitude + 3f || CollisionCheck(nextPosition) == true
-                || (transform.position - nextPosition).magnitude < 3f);
+            } while ((nextPosition - GameObject.FindGameObjectWithTag("Player").transform.position).magnitude 
+            > (transform.position - GameObject.FindGameObjectWithTag("Player").transform.position).magnitude || CollisionCheck(nextPosition) == true);
         }
         else
         {
