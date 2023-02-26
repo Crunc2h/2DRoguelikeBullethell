@@ -35,6 +35,10 @@ public class BaseAimFunctionality : MonoBehaviour
                 if (weapon.transform.parent.gameObject != weaponSlotOne)
                 {
                     weapon.transform.SetParent(weaponSlotOne.transform, false);
+                    if(gameObject.CompareTag("Player"))
+                    {
+                        GetComponent<BasePlayerMovement>().SpriteManager(0);
+                    }
                 }
                 if (weaponRotationAngle <= 90f && weaponRotationAngle >= 0f)
                 {
@@ -51,6 +55,10 @@ public class BaseAimFunctionality : MonoBehaviour
                 if (weapon.transform.parent.gameObject != weaponSlotTwo)
                 {
                     weapon.transform.SetParent(weaponSlotTwo.transform, false);
+                    if (gameObject.CompareTag("Player"))
+                    {
+                        GetComponent<BasePlayerMovement>().SpriteManager(1);
+                    }
                 }
                 if (weaponRotationAngle > 90f && weaponRotationAngle <= 180f)
                 {

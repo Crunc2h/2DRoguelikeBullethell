@@ -125,7 +125,7 @@ public class BasePlayerMovement : MonoBehaviour
             GetComponent<Animator>().SetInteger("direction", 0);
         }
     }
-    private void SpriteManager(int mode)
+    public void SpriteManager(int mode)
     {
         if (mode == 0)
         {
