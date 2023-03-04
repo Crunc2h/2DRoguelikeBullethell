@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BasePlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float movementSpeed = 10f;
+    public float movementSpeed = 15f;
     public float weaponAngle;
     private Vector2 inputScale;
     private Rigidbody2D rb;
@@ -30,7 +30,7 @@ public class BasePlayerMovement : MonoBehaviour
     }
     private void ListenForPlayerInput()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetMouseButtonDown(1))
         {
             if (!isDashing && dashCooldown > 0f)
             {

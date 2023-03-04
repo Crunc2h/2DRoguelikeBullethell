@@ -145,7 +145,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -215,9 +215,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f20a7d3c8cbe944d9e7f3af84a356df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weapon: {fileID: 0}
   weaponAimDirection: {x: 0, y: 0}
   weaponRotationAngle: 0
-  weapon: {fileID: 0}
 --- !u!114 &3324597186063878667
 MonoBehaviour:
   m_ObjectHideFlags: 0

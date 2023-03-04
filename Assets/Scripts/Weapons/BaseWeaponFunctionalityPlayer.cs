@@ -6,9 +6,9 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
 {
     [SerializeField] GameObject projectile;
     [Header("Projectile Configuration")]
-    [SerializeField] private float projectileForce = 1500f;
-    [SerializeField] private float projectileLifetime = 2f;
-    [SerializeField] private float fireRate = 3f;
+    [SerializeField] public float projectileForce = 1500f;
+    [SerializeField] public float projectileLifetime = 2f;
+    [SerializeField] public float fireRate = 3f;
     [SerializeField] private float accuracy = 1f;
     [SerializeField] private float maxAmmo = 20f;
     [SerializeField] private float currentAmmo = 20f;

@@ -185,6 +185,7 @@ GameObject:
   - component: {fileID: 5488864086591191319}
   - component: {fileID: 5488864086591186679}
   - component: {fileID: 1646898914322994937}
+  - component: {fileID: 8041411039151977779}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -305,7 +306,7 @@ Rigidbody2D:
   m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -321,7 +322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87844ecd1eb682d498a04e599068e596, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 15
+  movementSpeed: 12
   weaponAngle: 0
 --- !u!114 &5488864086591191319
 MonoBehaviour:
@@ -384,6 +385,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &8041411039151977779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5488864086591191308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa267717f1ccb948be2e29a0f199717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeSlowDownFactor: 0.1
+  isTimeSlowed: 0
 --- !u!1 &5488864087045706307
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,15 +16,16 @@ public class BaseEnemyLogic : MonoBehaviour
     
 
     [Header("Movement Variables")]
-    [SerializeField] private float movementSpeed = 5f;
+    public float movementSpeed = 5f;
     private Rigidbody2D rb;
-    private Vector2 movementDirection;
+    private Vector2 movementDirection = new Vector2(1, 1);
     private Vector3 nextPosition;
     private float dirChangeTimer = 0f;
     private float distanceToPlayer;
     private float controlChangeDistance = 10f;
     private float dirChangeDur = 0.3f;
     private bool manualMovement = false;
+    private bool movementSlowed = false;
     private bool shiftOnCooldown = false;
     public bool clearLineOfSight = false;
     private void Awake()
@@ -49,6 +50,19 @@ public class BaseEnemyLogic : MonoBehaviour
     {
         if (gameObject.name == "BasicTurret")
         {
+            //Speed management for time slowdown
+            if (GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed && !movementSlowed)
+            {
+                movementSlowed = true;
+                GetComponent<AIPath>().maxSpeed = 5 * GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor;
+                movementSpeed = movementSpeed * GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor;
+            }
+            else if(!GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed && movementSlowed)
+            {
+                movementSlowed= false;
+                GetComponent<AIPath>().maxSpeed = 5;
+                movementSpeed = movementSpeed * (1 / GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor);
+            }
             //Basic Turret Behavior
             AIvsManualMovementControlManager();
         }
@@ -62,11 +76,25 @@ public class BaseEnemyLogic : MonoBehaviour
         distanceToPlayer = (transform.position - GameObject.FindGameObjectWithTag("Player").transform.position).magnitude;
         if (distanceToPlayer < 8f)
         {
-            GetComponent<AIPath>().maxSpeed = 2;
+            if(GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed && !movementSlowed)
+            {
+                GetComponent<AIPath>().maxSpeed = 2 * GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor;
+            }
+            else if(!GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed && movementSlowed)
+            {
+                GetComponent<AIPath>().maxSpeed = 2;
+            }
         }
         else
         {
-            GetComponent<AIPath>().maxSpeed = 5;
+            if (GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed && !movementSlowed)
+            {
+                GetComponent<AIPath>().maxSpeed = 5 * GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor;
+            }
+            else if(!GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed && movementSlowed)
+            {
+                GetComponent<AIPath>().maxSpeed = 5;
+            }
         }
     }
     private void enemySight()
@@ -177,6 +205,7 @@ public class BaseEnemyLogic : MonoBehaviour
     {
         if(distanceToPlayer > 5f)
         {
+           
             do
             {
                 movementDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
@@ -190,8 +219,11 @@ public class BaseEnemyLogic : MonoBehaviour
             {
                 movementDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
                 nextPosition = (Vector2)transform.position + movementDirection * movementSpeed;
-            } while ((nextPosition - GameObject.FindGameObjectWithTag("Player").transform.position).magnitude < 3f || CollisionCheck(nextPosition) == true);
+            } while ((nextPosition - GameObject.FindGameObjectWithTag("Player").transform.position).magnitude < 
+            (transform.position - GameObject.FindGameObjectWithTag("Player").transform.position).magnitude || CollisionCheck(nextPosition) == true);
+           
         }
+           
 
     }
     private void Move()
