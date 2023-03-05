@@ -27,10 +27,6 @@ public class TimeControl : MonoBehaviour
 
     private void TimeSlowDown(float timeSlowFactor, float pitchValue)
     {
-        if(isTimeSlowed)
-        {
-            //Projectile speed up after time scale growth
-        }
         gObjectsInScene = FindObjectsOfType<GameObject>();
         for(int i = 0; i < gObjectsInScene.Length; i++)
         {
@@ -60,8 +56,21 @@ public class TimeControl : MonoBehaviour
             {
                 //what to do within player object
             }
-            childObjects = gObjectsInScene[i].GetComponentsInChildren<Transform>();
-            
+            if (gObjectsInScene[i].gameObject.CompareTag("enemyProjectile") || gObjectsInScene[i].gameObject.CompareTag("playerProjectile"))
+            {
+                if(isTimeSlowed)
+                {                   
+                    gObjectsInScene[i].gameObject.GetComponent<Rigidbody2D>().AddForce(gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile * 9);
+                    gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile = gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile * 10;                
+                }
+                else
+                {
+                    Debug.Log("heyyy");
+                    gObjectsInScene[i].gameObject.GetComponent<Rigidbody2D>().AddForce(-(gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile * 0.9f));
+                    gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile = gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile * (1 / 10);
+                }
+            }
+            childObjects = gObjectsInScene[i].GetComponentsInChildren<Transform>();          
             if(childObjects.Length > 0)
             {
                 for (int e = 0; e < childObjects.Length; e++)

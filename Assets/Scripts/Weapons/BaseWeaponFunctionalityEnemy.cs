@@ -48,6 +48,7 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
         calculateProjectilePositionAndRotation();
         projectileClone = Instantiate(projectile, projectileSpawnPos, initialProjectileRotation);
         projectileClone.GetComponent<Rigidbody2D>().AddForce((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
+        projectileClone.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile = ((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
         StartCoroutine(projectileLifeTime(projectileClone));
         if (projectileClone.GetComponent<Animator>() != null)
         {

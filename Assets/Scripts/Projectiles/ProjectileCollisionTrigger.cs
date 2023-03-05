@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ProjectileCollisionTrigger : MonoBehaviour
 {
+    public Vector2 currentForceOnProjectile;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(gameObject.CompareTag("enemyProjectile"))

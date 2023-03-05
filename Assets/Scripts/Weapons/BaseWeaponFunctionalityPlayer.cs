@@ -73,9 +73,9 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
         calculateProjectilePositionAndRotation();
         projectileClone = Instantiate(projectile, projectileSpawnPos, initialProjectileRotation);
         projectileClone.GetComponent<Rigidbody2D>().AddForce((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
-        
+        projectileClone.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile = ((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
         //Checks and plays if projectile has a spawn animation
-        if(projectileClone.GetComponent<Animator>() != null)
+        if (projectileClone.GetComponent<Animator>() != null)
         {
             projectileClone.GetComponent<Animator>().SetTrigger("playerProjectile");
         }
