@@ -9,7 +9,7 @@ public class TimeControl : MonoBehaviour
     private Transform[] childObjects;
     public float timeSlowDownFactor = 0.1f;
     private float timeTravelCooldown = 14f;
-    private bool timeTravelCdActive = false;
+    private bool timeTravelCdActive = true;
     public bool isTimeSlowed = false;
     private bool isTimeTraveling = false;
 
@@ -31,7 +31,7 @@ public class TimeControl : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.F) && !timeTravelCdActive)
+        if(Input.GetKeyDown(KeyCode.F) && !timeTravelCdActive && !isTimeTraveling)
         {
             StartCoroutine(TimeTravel());
         }
@@ -46,40 +46,36 @@ public class TimeControl : MonoBehaviour
         }
     }
     private IEnumerator RecordPositions()
-    { 
-        while(true)
+    {
+        for (int i = 0; i < positions.Length; i++)
         {
-            if(!isTimeTraveling)
+            positions[i] = transform.position;
+            if (i == positions.Length - 1)
             {
-                for (int i = 0; i < positions.Length; i++)
+                for (int e = 1; e < positions.Length; e++)
                 {
-                    positions[i] = transform.position;
-                    if (i == positions.Length - 1)
-                    {
-                        for (int e = 1; e < positions.Length; e++)
-                        {
-                            positions[e - 1] = positions[e];
-                        }
-                        i--;
-                    }
-                    if (isTimeTraveling)
-                    {
-                        break;
-                    }
-                    yield return new WaitForSeconds(0.01f);
+                    positions[e - 1] = positions[e];
                 }
+                i--;
+            }
+            yield return new WaitForSeconds(0.01f);            
+            if (isTimeTraveling)
+            {
+                break;
             }
         }
     }
     private IEnumerator TimeTravel()
     {
         isTimeTraveling = true;
-        for(int i = positions.Length - 1; i > 0; i--)
+        for (int i = positions.Length - 1; i > 0; i--)
         {
             transform.position = positions[i];
             yield return new WaitForSeconds(0.002f);
         }
+        StartCoroutine(RecordPositions());
         isTimeTraveling = false;
+        timeTravelCdActive = true;
     }
     private void TimeSlowDown(float timeSlowFactor, float pitchValue)
     {
@@ -121,9 +117,9 @@ public class TimeControl : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("heyyy");
                     gObjectsInScene[i].gameObject.GetComponent<Rigidbody2D>().AddForce(-(gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile * 0.9f));
                     gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile = gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile * (1 / 10);
+
                 }
             }
             childObjects = gObjectsInScene[i].GetComponentsInChildren<Transform>();          
