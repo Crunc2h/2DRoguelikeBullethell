@@ -5,11 +5,18 @@ using UnityEngine;
 public class TimeControl : MonoBehaviour
 {
     private GameObject[] gObjectsInScene;
-    private GameObject[] projectiles;
+    private Vector3[] positions = new Vector3[700];
     private Transform[] childObjects;
     public float timeSlowDownFactor = 0.1f;
+    private float timeTravelCooldown = 14f;
+    private bool timeTravelCdActive = false;
     public bool isTimeSlowed = false;
+    private bool isTimeTraveling = false;
 
+    private void Awake()
+    {
+        StartCoroutine(RecordPositions());
+    }
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space))
@@ -23,8 +30,57 @@ public class TimeControl : MonoBehaviour
                 TimeSlowDown(timeSlowDownFactor, 1f);
             }
         }
-    }
 
+        if(Input.GetKeyDown(KeyCode.F) && !timeTravelCdActive)
+        {
+            StartCoroutine(TimeTravel());
+        }
+        if(timeTravelCdActive)
+        {
+            timeTravelCooldown -= Time.unscaledDeltaTime;
+            if(timeTravelCooldown <= 0f)
+            {
+                timeTravelCdActive = false;
+                timeTravelCooldown = 14f;
+            }
+        }
+    }
+    private IEnumerator RecordPositions()
+    { 
+        while(true)
+        {
+            if(!isTimeTraveling)
+            {
+                for (int i = 0; i < positions.Length; i++)
+                {
+                    positions[i] = transform.position;
+                    if (i == positions.Length - 1)
+                    {
+                        for (int e = 1; e < positions.Length; e++)
+                        {
+                            positions[e - 1] = positions[e];
+                        }
+                        i--;
+                    }
+                    if (isTimeTraveling)
+                    {
+                        break;
+                    }
+                    yield return new WaitForSeconds(0.01f);
+                }
+            }
+        }
+    }
+    private IEnumerator TimeTravel()
+    {
+        isTimeTraveling = true;
+        for(int i = positions.Length - 1; i > 0; i--)
+        {
+            transform.position = positions[i];
+            yield return new WaitForSeconds(0.002f);
+        }
+        isTimeTraveling = false;
+    }
     private void TimeSlowDown(float timeSlowFactor, float pitchValue)
     {
         gObjectsInScene = FindObjectsOfType<GameObject>();
