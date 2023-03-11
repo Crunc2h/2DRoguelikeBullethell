@@ -774,7 +774,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4988906604953583169, guid: c2ab8fbdce472cd4c9bb22f7ed74a191, type: 3}
       propertyPath: projectileLifetime
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8618727356988685390, guid: c2ab8fbdce472cd4c9bb22f7ed74a191, type: 3}
       propertyPath: m_RootOrder

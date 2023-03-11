@@ -79,16 +79,20 @@ public class TimeControl : MonoBehaviour
     }
     private void TimeSlowDown(float timeSlowFactor, float pitchValue)
     {
-        gObjectsInScene = FindObjectsOfType<GameObject>();
-        for(int i = 0; i < gObjectsInScene.Length; i++)
+        isTimeSlowed = !isTimeSlowed;
+        gObjectsInScene = FindObjectsOfType<GameObject>();      
+        for (int i = 0; i < gObjectsInScene.Length; i++)
         {
             if (gObjectsInScene[i].GetComponent<AudioSource>() != null)
             {
+                //Equalize all pitches to the given pitch value for game objects
                 gObjectsInScene[i].GetComponent<AudioSource>().pitch = pitchValue;
             }
+            
+            //Time adjustments on mobs
             if(gObjectsInScene[i].gameObject.CompareTag("Mob"))
             {
-                if(!isTimeSlowed)
+                if(isTimeSlowed)
                 {
                     if (gObjectsInScene[i].gameObject.GetComponent<Animator>() != null)
                     {
@@ -104,37 +108,56 @@ public class TimeControl : MonoBehaviour
                 }
 
             }
-            if (gObjectsInScene[i].gameObject.CompareTag("Player"))
-            {
-                //what to do within player object
-            }
+            
+            //Time adjustments on projectiles          
             if (gObjectsInScene[i].gameObject.CompareTag("enemyProjectile") || gObjectsInScene[i].gameObject.CompareTag("playerProjectile"))
             {
-                if(isTimeSlowed)
-                {                   
-                    gObjectsInScene[i].gameObject.GetComponent<Rigidbody2D>().AddForce(gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile * 9);
-                    gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile = gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile * 10;                
+                if(!isTimeSlowed)
+                {
+                    //Speed up all projectiles
+                    if(gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentProjectileForce == gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().originalWeaponProjectileForce)
+                    {
+                        gObjectsInScene[i].gameObject.GetComponent<Rigidbody2D>().AddForce(gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceAndDirectionOnProjectile * 0.9f);
+                    }
+                    else
+                    {
+                        gObjectsInScene[i].gameObject.GetComponent<Rigidbody2D>().AddForce(gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceAndDirectionOnProjectile * 9f);
+                    }
                 }
                 else
                 {
-                    gObjectsInScene[i].gameObject.GetComponent<Rigidbody2D>().AddForce(-(gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile * 0.9f));
-                    gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile = gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile * (1 / 10);
-
+                    //Slow down all projectiles
+                    if (gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentProjectileForce == gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().originalWeaponProjectileForce)
+                    {
+                        gObjectsInScene[i].gameObject.GetComponent<Rigidbody2D>().AddForce(-(gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceAndDirectionOnProjectile * 0.9f));
+                    }
+                    else
+                    {
+                        gObjectsInScene[i].gameObject.GetComponent<Rigidbody2D>().AddForce(-gObjectsInScene[i].gameObject.GetComponent<ProjectileCollisionTrigger>().currentForceAndDirectionOnProjectile * 9f);
+                    }
+                        
                 }
             }
+            
+            //Time adjustments on child objects if there are any
+            
             childObjects = gObjectsInScene[i].GetComponentsInChildren<Transform>();          
+            
             if(childObjects.Length > 0)
             {
                 for (int e = 0; e < childObjects.Length; e++)
                 {        
                     if (childObjects[e].gameObject.GetComponent<AudioSource>() != null)
                     {
+                        //Equalize all pitches to the given pitch value for child objects
                         childObjects[e].gameObject.GetComponent<AudioSource>().pitch = pitchValue;
                     }
+                    
                     if (gObjectsInScene[i].gameObject.CompareTag("Mob") && childObjects[e].gameObject.CompareTag("weapon"))
                     {
-                        if(!isTimeSlowed)
+                        if(isTimeSlowed)
                         {
+                            //Slowdown all enemy weapon functionalities
                             if(childObjects[e].gameObject.GetComponent<Animator>() != null)
                             {
                                 childObjects[e].gameObject.GetComponent<Animator>().speed = childObjects[e].gameObject.GetComponent<Animator>().speed * timeSlowFactor;
@@ -150,6 +173,7 @@ public class TimeControl : MonoBehaviour
                         }
                         else
                         {
+                            //Speed up all enemy weapon functionalities
                             if(childObjects[e].gameObject.GetComponent<Animator>() != null)
                             {
                                 childObjects[e].gameObject.GetComponent<Animator>().speed = childObjects[e].gameObject.GetComponent<Animator>().speed * (1 / timeSlowFactor);
@@ -166,8 +190,9 @@ public class TimeControl : MonoBehaviour
                     }
                     if (gObjectsInScene[i].gameObject.CompareTag("Player") && childObjects[e].gameObject.CompareTag("weapon"))
                     {
-                        if (!isTimeSlowed)
+                        if (isTimeSlowed)
                         {
+                            //Slowdown all player weapon functionalities
                             childObjects[e].gameObject.GetComponent<Animator>().speed = childObjects[e].gameObject.GetComponent<Animator>().speed * timeSlowFactor;
                             childObjects[e].gameObject.GetComponent<BaseWeaponFunctionalityPlayer>().projectileForce =
                             childObjects[e].gameObject.GetComponent<BaseWeaponFunctionalityPlayer>().projectileForce * timeSlowFactor;
@@ -179,6 +204,7 @@ public class TimeControl : MonoBehaviour
                         }
                         else
                         {
+                            //Speed up all player weapon functionalities
                             childObjects[e].gameObject.GetComponent<Animator>().speed = childObjects[e].gameObject.GetComponent<Animator>().speed * (1 / timeSlowFactor);
                             childObjects[e].gameObject.GetComponent<BaseWeaponFunctionalityPlayer>().projectileForce =
                             childObjects[e].gameObject.GetComponent<BaseWeaponFunctionalityPlayer>().projectileForce * (1 / timeSlowFactor);
@@ -191,7 +217,6 @@ public class TimeControl : MonoBehaviour
                 }
             }
         }
-        isTimeSlowed = !isTimeSlowed;
     }
 
 }

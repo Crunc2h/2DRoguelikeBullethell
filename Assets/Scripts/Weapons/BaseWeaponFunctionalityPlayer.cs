@@ -26,6 +26,7 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
     private GameObject bulletTrail;
     private Quaternion initialProjectileRotation;
     private Vector3 projectileSpawnPos;
+    public float originalProjectileForce;
     private bool lmbDown = false;
     private bool isFiring = false;
     private bool isReloading = false;
@@ -73,7 +74,9 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
         calculateProjectilePositionAndRotation();
         projectileClone = Instantiate(projectile, projectileSpawnPos, initialProjectileRotation);
         projectileClone.GetComponent<Rigidbody2D>().AddForce((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
-        projectileClone.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile = ((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
+        projectileClone.GetComponent<ProjectileCollisionTrigger>().currentForceAndDirectionOnProjectile = (Vector2)(initialProjectileRotation * Vector2.right) * projectileForce;
+        projectileClone.GetComponent<ProjectileCollisionTrigger>().currentProjectileForce = projectileForce;
+        projectileClone.GetComponent<ProjectileCollisionTrigger>().originalWeaponProjectileForce = originalProjectileForce;
         //Checks and plays if projectile has a spawn animation
         if (projectileClone.GetComponent<Animator>() != null)
         {
@@ -183,6 +186,7 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
     }
     private void Definitions()
     {
+        originalProjectileForce = projectileForce;
         Transform[] childComponents = GetComponentsInChildren<Transform>();
         for (int i = 0; i < childComponents.Length; i++)
         {

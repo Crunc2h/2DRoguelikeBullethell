@@ -21,6 +21,7 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
     private Quaternion initialProjectileRotation;
     public Vector3 projectileSpawnPos;
     public float currentWeaponRotation;
+    public float originalProjectileForce;
     public bool fireCommand = false;
     private bool isFiring = false;
 
@@ -48,7 +49,9 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
         calculateProjectilePositionAndRotation();
         projectileClone = Instantiate(projectile, projectileSpawnPos, initialProjectileRotation);
         projectileClone.GetComponent<Rigidbody2D>().AddForce((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
-        projectileClone.GetComponent<ProjectileCollisionTrigger>().currentForceOnProjectile = ((Vector2)(initialProjectileRotation * Vector2.right) * projectileForce);
+        projectileClone.GetComponent<ProjectileCollisionTrigger>().currentForceAndDirectionOnProjectile = (Vector2)(initialProjectileRotation * Vector2.right) * projectileForce;
+        projectileClone.GetComponent<ProjectileCollisionTrigger>().currentProjectileForce = projectileForce;
+        projectileClone.GetComponent<ProjectileCollisionTrigger>().originalWeaponProjectileForce = originalProjectileForce;
         StartCoroutine(projectileLifeTime(projectileClone));
         if (projectileClone.GetComponent<Animator>() != null)
         {
@@ -116,6 +119,7 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
     }
     private void Definitions()
     {
+        originalProjectileForce = projectileForce;
         Transform[] childComponents = GetComponentsInChildren<Transform>();
         for(int i = 0; i < childComponents.Length; i++)
         {
