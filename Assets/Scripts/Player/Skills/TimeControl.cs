@@ -92,7 +92,7 @@ public class TimeControl : MonoBehaviour
             //Time adjustments on mobs
             if(gObjectsInScene[i].gameObject.CompareTag("Mob"))
             {
-                if(isTimeSlowed)
+                if (isTimeSlowed)
                 {
                     if (gObjectsInScene[i].gameObject.GetComponent<Animator>() != null)
                     {
@@ -155,7 +155,7 @@ public class TimeControl : MonoBehaviour
                     
                     if (gObjectsInScene[i].gameObject.CompareTag("Mob") && childObjects[e].gameObject.CompareTag("weapon"))
                     {
-                        if(isTimeSlowed)
+                        if (isTimeSlowed)
                         {
                             //Slowdown all enemy weapon functionalities
                             if(childObjects[e].gameObject.GetComponent<Animator>() != null)
