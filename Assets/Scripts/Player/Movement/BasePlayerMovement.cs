@@ -12,7 +12,7 @@ public class BasePlayerMovement : MonoBehaviour
     private GameObject weaponSlotOne;
     private GameObject weaponSlotTwo;
     private bool isDashing = false;
-    private float dashDuration = 0.3f;
+    private float dashDuration = 0.33f;
     private float dashCooldown = 1f;
     private void Awake()
     {
@@ -39,7 +39,7 @@ public class BasePlayerMovement : MonoBehaviour
         }
     }
     private void DashManager()
-    {
+    {    
         if(isDashing)
         {
             dashCooldown -= Time.unscaledDeltaTime;
@@ -47,17 +47,23 @@ public class BasePlayerMovement : MonoBehaviour
             
             if(GetComponent<BoxCollider2D>().enabled && dashDuration > 0f)
             {
+                GetComponent<Animator>().SetBool("dash", true);
+                weaponSlotOne.SetActive(false);
+                weaponSlotTwo.SetActive(false);
                 GetComponent<BoxCollider2D>().enabled = false;
             }
             else if(!GetComponent<BoxCollider2D>().enabled && dashDuration <= 0f)
             {
+                weaponSlotOne.SetActive(true);
+                weaponSlotTwo.SetActive(true);
+                GetComponent<Animator>().SetBool("dash", false);
                 GetComponent<BoxCollider2D>().enabled = true;
             }
             
             if(dashCooldown <= 0f)
             {
                 dashCooldown = 1f;
-                dashDuration = 0.3f;
+                dashDuration = 0.33f;
                 isDashing = false;
             }
         }
@@ -82,7 +88,7 @@ public class BasePlayerMovement : MonoBehaviour
         {
             if (dashDuration > 0f)
             {
-                rb.MovePosition((Vector2)transform.position + GetComponent<BaseAimFunctionality>().weaponAimDirection * 20f * Time.fixedDeltaTime);
+                rb.MovePosition((Vector2)transform.position + GetComponent<BaseAimFunctionality>().weaponAimDirection * 30f * Time.fixedDeltaTime);
             }
             else
             {

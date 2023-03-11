@@ -818,6 +818,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8741104610790518724, guid: c2ab8fbdce472cd4c9bb22f7ed74a191, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8741104610790518725, guid: c2ab8fbdce472cd4c9bb22f7ed74a191, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8741104610790518726, guid: c2ab8fbdce472cd4c9bb22f7ed74a191, type: 3}
       propertyPath: m_Name
       value: Rifle
