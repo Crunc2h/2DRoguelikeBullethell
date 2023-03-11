@@ -11,8 +11,8 @@ public class BasePlayerMovement : MonoBehaviour
     private SpriteRenderer playerSpriteRend;
     private GameObject weaponSlotOne;
     private GameObject weaponSlotTwo;
-    private bool isDashing = false;
-    private float dashDuration = 0.33f;
+    public bool isDashing = false;
+    public float dashDuration = 0.33f;
     private float dashCooldown = 1f;
     private void Awake()
     {
@@ -45,19 +45,17 @@ public class BasePlayerMovement : MonoBehaviour
             dashCooldown -= Time.unscaledDeltaTime;
             dashDuration -= Time.unscaledDeltaTime;
             
-            if(GetComponent<BoxCollider2D>().enabled && dashDuration > 0f)
+            if(!GetComponent<Animator>().GetBool("dash") && dashDuration > 0f)
             {
                 GetComponent<Animator>().SetBool("dash", true);
                 weaponSlotOne.SetActive(false);
                 weaponSlotTwo.SetActive(false);
-                GetComponent<BoxCollider2D>().enabled = false;
             }
-            else if(!GetComponent<BoxCollider2D>().enabled && dashDuration <= 0f)
+            else if(GetComponent<Animator>().GetBool("dash") && dashDuration <= 0f)
             {
                 weaponSlotOne.SetActive(true);
                 weaponSlotTwo.SetActive(true);
                 GetComponent<Animator>().SetBool("dash", false);
-                GetComponent<BoxCollider2D>().enabled = true;
             }
             
             if(dashCooldown <= 0f)
