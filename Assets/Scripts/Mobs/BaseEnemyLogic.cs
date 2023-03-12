@@ -54,14 +54,14 @@ public class BaseEnemyLogic : MonoBehaviour
             if (GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed && !movementSlowed)
             {
                 movementSlowed = true;
-                GetComponent<AIPath>().maxSpeed = 5 * GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor;
-                movementSpeed = movementSpeed * GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor;
+                GetComponent<AIPath>().maxSpeed = 5 * GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor * 0.5f;
+                movementSpeed = movementSpeed * GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor * 0.5f;
             }
             else if(!GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed && movementSlowed)
             {
                 movementSlowed= false;
                 GetComponent<AIPath>().maxSpeed = 5;
-                movementSpeed = movementSpeed * (1 / GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor);
+                movementSpeed = movementSpeed * (1 / GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor) * 2;
             }
             //Basic Turret Behavior
             AIvsManualMovementControlManager();
@@ -78,7 +78,7 @@ public class BaseEnemyLogic : MonoBehaviour
         {
             if(GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed && !movementSlowed)
             {
-                GetComponent<AIPath>().maxSpeed = 2 * GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor;
+                GetComponent<AIPath>().maxSpeed = 2 * GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor * 0.1f;
             }
             else if(!GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed && movementSlowed)
             {
@@ -89,7 +89,7 @@ public class BaseEnemyLogic : MonoBehaviour
         {
             if (GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed && !movementSlowed)
             {
-                GetComponent<AIPath>().maxSpeed = 5 * GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor;
+                GetComponent<AIPath>().maxSpeed = 5 * GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().timeSlowDownFactor * 0.1f;
             }
             else if(!GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed && movementSlowed)
             {

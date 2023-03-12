@@ -326,6 +326,7 @@ MonoBehaviour:
   weaponAngle: 0
   isDashing: 0
   dashDuration: 0.33
+  dashCooldown: 1
 --- !u!114 &5488864086591191319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,6 +342,7 @@ MonoBehaviour:
   weapon: {fileID: 0}
   weaponAimDirection: {x: 0, y: 0}
   weaponRotationAngle: 0
+  targetWorldPosition: {x: 0, y: 0}
 --- !u!114 &5488864086591186679
 MonoBehaviour:
   m_ObjectHideFlags: 0

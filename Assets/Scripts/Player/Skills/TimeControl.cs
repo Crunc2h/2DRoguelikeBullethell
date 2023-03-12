@@ -5,17 +5,19 @@ using UnityEngine;
 public class TimeControl : MonoBehaviour
 {
     private GameObject[] gObjectsInScene;
-    private Vector3[] positions = new Vector3[700];
+    private Vector3[] positionsTTravel = new Vector3[700];
     private Transform[] childObjects;
     public float timeSlowDownFactor = 0.1f;
+    public bool isTimeSlowed = false;
+    private float timeSlowdownCd = 7f;
+    
     private float timeTravelCooldown = 14f;
     private bool timeTravelCdActive = true;
-    public bool isTimeSlowed = false;
     private bool isTimeTraveling = false;
 
     private void Awake()
     {
-        StartCoroutine(RecordPositions());
+        StartCoroutine(RecordPositionsForTimeTravel());
     }
     private void Update()
     {
@@ -26,6 +28,14 @@ public class TimeControl : MonoBehaviour
                 TimeSlowDown(timeSlowDownFactor, 0.2f);
             }
             else
+            {
+                TimeSlowDown(timeSlowDownFactor, 1f);
+            }
+        }
+        if(isTimeSlowed)
+        {
+            timeSlowdownCd -= Time.deltaTime;
+            if(timeSlowdownCd <= 0f)
             {
                 TimeSlowDown(timeSlowDownFactor, 1f);
             }
@@ -45,16 +55,16 @@ public class TimeControl : MonoBehaviour
             }
         }
     }
-    private IEnumerator RecordPositions()
+    private IEnumerator RecordPositionsForTimeTravel()
     {
-        for (int i = 0; i < positions.Length; i++)
+        for (int i = 0; i < positionsTTravel.Length; i++)
         {
-            positions[i] = transform.position;
-            if (i == positions.Length - 1)
+            positionsTTravel[i] = transform.position;
+            if (i == positionsTTravel.Length - 1)
             {
-                for (int e = 1; e < positions.Length; e++)
+                for (int e = 1; e < positionsTTravel.Length; e++)
                 {
-                    positions[e - 1] = positions[e];
+                    positionsTTravel[e - 1] = positionsTTravel[e];
                 }
                 i--;
             }
@@ -68,18 +78,26 @@ public class TimeControl : MonoBehaviour
     private IEnumerator TimeTravel()
     {
         isTimeTraveling = true;
-        for (int i = positions.Length - 1; i > 0; i--)
+        for (int i = positionsTTravel.Length - 1; i > 0; i--)
         {
-            transform.position = positions[i];
+            transform.position = positionsTTravel[i];
             yield return new WaitForSeconds(0.002f);
         }
-        StartCoroutine(RecordPositions());
+        StartCoroutine(RecordPositionsForTimeTravel());
         isTimeTraveling = false;
         timeTravelCdActive = true;
     }
     private void TimeSlowDown(float timeSlowFactor, float pitchValue)
     {
-        isTimeSlowed = !isTimeSlowed;
+        if(!isTimeSlowed)
+        {
+            isTimeSlowed = true;
+        }
+        else
+        {
+            isTimeSlowed = false;
+            timeSlowdownCd = 7f;
+        }
         gObjectsInScene = FindObjectsOfType<GameObject>();      
         for (int i = 0; i < gObjectsInScene.Length; i++)
         {

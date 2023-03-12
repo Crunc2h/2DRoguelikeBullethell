@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 public class BaseAimFunctionality : MonoBehaviour
 {
     public GameObject weapon;
     public Vector2 weaponAimDirection;
+    private Vector3[] playerPositions = new Vector3[700];
     public float weaponRotationAngle = 0f;
     private GameObject weaponSlotOne;
     private GameObject weaponSlotTwo;
-    private Vector2 targetWorldPosition;
+    public Vector2 targetWorldPosition;
+    private bool isAimCalcDurTSActive = false;
     private void Awake()
     {
         Definitions();
@@ -108,11 +111,43 @@ public class BaseAimFunctionality : MonoBehaviour
         }
         else if(gameObject.CompareTag("Mob"))
         {
-            targetWorldPosition = (Vector2)GameObject.FindGameObjectWithTag("Player").transform.position;
-            weaponAimDirection = (targetWorldPosition - (Vector2)transform.position).normalized;
-            weaponRotationAngle = Mathf.Atan2(weaponAimDirection.y, weaponAimDirection.x) * Mathf.Rad2Deg;
-            GetComponentInChildren<BaseWeaponFunctionalityEnemy>().currentWeaponRotation = weaponRotationAngle;
+            if(!GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed)
+            {
+                targetWorldPosition = (Vector2)GameObject.FindGameObjectWithTag("Player").transform.position;
+                weaponAimDirection = (targetWorldPosition - (Vector2)transform.position).normalized;
+                weaponRotationAngle = Mathf.Atan2(weaponAimDirection.y, weaponAimDirection.x) * Mathf.Rad2Deg;
+                GetComponentInChildren<BaseWeaponFunctionalityEnemy>().currentWeaponRotation = weaponRotationAngle;
+            }
+            else
+            {
+                if(!isAimCalcDurTSActive)
+                {
+                    StartCoroutine(AimCalculationDuringTimeSlowdown());
+                }
+            }
         }
+    }
+    private IEnumerator AimCalculationDuringTimeSlowdown()
+    {
+        isAimCalcDurTSActive = true;
+        int counter = 0;
+        int index = 0;
+        for(int i = 0; i < playerPositions.Length; i++)
+        {
+            counter++;
+            playerPositions[i] = GameObject.FindGameObjectWithTag("Player").transform.position;
+            if(counter == 5)
+            {
+                counter = 0;
+                targetWorldPosition = playerPositions[index];
+                weaponAimDirection = (targetWorldPosition - (Vector2)transform.position).normalized;
+                weaponRotationAngle = Mathf.Atan2(weaponAimDirection.y, weaponAimDirection.x) * Mathf.Rad2Deg;
+                GetComponentInChildren<BaseWeaponFunctionalityEnemy>().currentWeaponRotation = weaponRotationAngle;
+                index++;
+            }
+            yield return new WaitForSeconds(0.01f);
+        }
+        isAimCalcDurTSActive = false;
     }
     private void Definitions()
     {
