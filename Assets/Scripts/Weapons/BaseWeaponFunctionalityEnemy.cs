@@ -24,6 +24,8 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
     public float originalProjectileForce;
     public bool fireCommand = false;
     private bool isFiring = false;
+    private bool fireOnCooldown = false;
+    private float fireCooldown;
 
     private void Awake()
     {
@@ -85,8 +87,44 @@ public class BaseWeaponFunctionalityEnemy : MonoBehaviour
         isFiring = true;
         while (fireCommand)
         {
-            fireProjectileLogic();
-            yield return new WaitForSeconds((1 / fireRate) + Random.Range(-randomizedShootingRateRange * (1 / fireRate), randomizedShootingRateRange * (1 / fireRate)));
+            if(!fireOnCooldown)
+            {
+                fireProjectileLogic();
+                fireOnCooldown = true;
+                while(fireOnCooldown)
+                {
+                    if(!GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed)
+                    {
+                        fireCooldown = (1 / fireRate) + Random.Range(-randomizedShootingRateRange * (1 / fireRate), randomizedShootingRateRange * (1 / fireRate));
+                        Debug.Log("DEBUG" + fireCooldown);
+                        while (fireCooldown > 0 && !GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed)
+                        {
+                            fireCooldown -= 0.01f;
+                            yield return new WaitForSeconds(0.01f);
+                        }
+                        if(fireCooldown <= 0f)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        fireCooldown = (1 / fireRate) + Random.Range(-randomizedShootingRateRange * (1 / fireRate), randomizedShootingRateRange * (1 / fireRate));
+                        Debug.Log("DEBUG" + fireCooldown);
+                        while (fireCooldown > 0 && GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeSlowed)
+                        {
+                            fireCooldown -= 0.01f;
+                            yield return new WaitForSeconds(0.01f);
+                        }
+                        if (fireCooldown <= 0f)
+                        {
+                            break;
+                        }
+                    }
+                }
+                fireOnCooldown = false;
+            }
+            //yield return new WaitForSeconds((1 / fireRate) + Random.Range(-randomizedShootingRateRange * (1 / fireRate), randomizedShootingRateRange * (1 / fireRate)));
         }
         if (pistolFireSFX.loop)
         {
