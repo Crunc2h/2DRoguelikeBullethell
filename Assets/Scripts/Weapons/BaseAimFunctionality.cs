@@ -100,7 +100,11 @@ public class BaseAimFunctionality : MonoBehaviour
             weaponAimDirection = (targetWorldPosition - (Vector2)transform.position).normalized;
             weaponRotationAngle = Mathf.Atan2(weaponAimDirection.y, weaponAimDirection.x) * Mathf.Rad2Deg;
             GetComponent<BasePlayerMovement>().weaponAngle = weaponRotationAngle;
-            GetComponent<BasePlayerMovement>().CalculateAimDirection();
+            if(!GetComponent<BasePlayerMovement>().isDashing || GetComponent<BasePlayerMovement>().isDashing 
+                && GetComponent<BasePlayerMovement>().dashDuration <= 0f)
+            {
+                GetComponent<BasePlayerMovement>().CalculateAimDirection();
+            }
         }
         else if(gameObject.CompareTag("Mob"))
         {

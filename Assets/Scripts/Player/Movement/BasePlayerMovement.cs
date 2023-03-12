@@ -13,7 +13,8 @@ public class BasePlayerMovement : MonoBehaviour
     private GameObject weaponSlotTwo;
     public bool isDashing = false;
     public float dashDuration = 0.33f;
-    private float dashCooldown = 1f;
+    public float dashCooldown = 1f;
+    private Vector2 dashDirection;
     private void Awake()
     {
         Definitions();
@@ -47,6 +48,7 @@ public class BasePlayerMovement : MonoBehaviour
             
             if(!GetComponent<Animator>().GetBool("dash") && dashDuration > 0f)
             {
+                dashDirection = GetComponent<BaseAimFunctionality>().weaponAimDirection;
                 GetComponent<Animator>().SetBool("dash", true);
                 weaponSlotOne.SetActive(false);
                 weaponSlotTwo.SetActive(false);
@@ -86,7 +88,7 @@ public class BasePlayerMovement : MonoBehaviour
         {
             if (dashDuration > 0f)
             {
-                rb.MovePosition((Vector2)transform.position + GetComponent<BaseAimFunctionality>().weaponAimDirection * 30f * Time.fixedDeltaTime);
+                rb.MovePosition((Vector2)transform.position + dashDirection * 30f * Time.fixedDeltaTime);
             }
             else
             {
@@ -100,34 +102,34 @@ public class BasePlayerMovement : MonoBehaviour
     }
     public void CalculateAimDirection()
     {
-        if (weaponAngle <= -60f && weaponAngle >= -120f)
-        {
-            GetComponent<Animator>().SetInteger("direction", 5);
-        }
-        else if (weaponAngle <= -120f && weaponAngle >= -180f || weaponAngle >= 160f && weaponAngle <= 180f)
-        {
-            SpriteManager(1);
-            GetComponent<Animator>().SetInteger("direction", 4);
-        }
-        else if (weaponAngle < 160f && weaponAngle >= 100f)
-        {
-            SpriteManager(1);
-            GetComponent<Animator>().SetInteger("direction", 3);
-        }
-        else if (weaponAngle < 100f && weaponAngle >= 80f)
-        {
-            GetComponent<Animator>().SetInteger("direction", 2);
-        }
-        else if (weaponAngle < 80f && weaponAngle >= 20f)
-        {
-            SpriteManager(0);
-            GetComponent<Animator>().SetInteger("direction", 1);
-        }
-        else if (weaponAngle < 20f && weaponAngle >= 0f || weaponAngle < 0f && weaponAngle > -60f)
-        {
-            SpriteManager(0);
-            GetComponent<Animator>().SetInteger("direction", 0);
-        }
+            if (weaponAngle <= -60f && weaponAngle >= -120f)
+            {
+                GetComponent<Animator>().SetInteger("direction", 5);
+            }
+            else if (weaponAngle <= -120f && weaponAngle >= -180f || weaponAngle >= 160f && weaponAngle <= 180f)
+            {
+                SpriteManager(1);
+                GetComponent<Animator>().SetInteger("direction", 4);
+            }
+            else if (weaponAngle < 160f && weaponAngle >= 100f)
+            {
+                SpriteManager(1);
+                GetComponent<Animator>().SetInteger("direction", 3);
+            }
+            else if (weaponAngle < 100f && weaponAngle >= 80f)
+            {
+                GetComponent<Animator>().SetInteger("direction", 2);
+            }
+            else if (weaponAngle < 80f && weaponAngle >= 20f)
+            {
+                SpriteManager(0);
+                GetComponent<Animator>().SetInteger("direction", 1);
+            }
+            else if (weaponAngle < 20f && weaponAngle >= 0f || weaponAngle < 0f && weaponAngle > -60f)
+            {
+                SpriteManager(0);
+                GetComponent<Animator>().SetInteger("direction", 0);
+            }
     }
     public void SpriteManager(int mode)
     {
