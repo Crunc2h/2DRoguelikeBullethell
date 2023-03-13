@@ -9,7 +9,7 @@ public class TimeControl : MonoBehaviour
     [SerializeField] private GameObject playerAfterImage;
     private GameObject AImageInstance;
     private GameObject[] gObjectsInScene;
-    private Transform[] transformsTTravel = new Transform[700];
+    private Vector3[] positionsTTravel = new Vector3[700];
     private Transform[] childObjects;
     public float timeSlowDownFactor = 0.1f;
     public bool isTimeSlowed = false;
@@ -63,14 +63,14 @@ public class TimeControl : MonoBehaviour
     }
     private IEnumerator RecordPositionsForTimeTravel()
     {
-        for (int i = 0; i < transformsTTravel.Length; i++)
+        for (int i = 0; i < positionsTTravel.Length; i++)
         {
-            transformsTTravel[i] = transform.transform;
-            if (i == transformsTTravel.Length - 1)
+            positionsTTravel[i] = transform.position;
+            if (i == positionsTTravel.Length - 1)
             {
-                for (int e = 1; e < transformsTTravel.Length; e++)
+                for (int e = 1; e < positionsTTravel.Length; e++)
                 {
-                    transformsTTravel[e - 1] = transformsTTravel[e];
+                    positionsTTravel[e - 1] = positionsTTravel[e];
                 }
                 i--;
             }
@@ -93,12 +93,14 @@ public class TimeControl : MonoBehaviour
         GetComponent<BaseAimFunctionality>().enabled = false;
         GetComponent<Animator>().enabled = false;
         GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = false;
-        for (int i = transformsTTravel.Length - 1; i > 0; i--)
+        for (int i = positionsTTravel.Length - 1; i > 0; i--)
         {
-            transform.position = transformsTTravel[i].position;           
+            transform.position = positionsTTravel[i];           
             
-            //Instantiate(playerAfterImage, transformsTTravel[i]);
-            //StartCoroutine(AfterImage(AImageInstance));
+            AImageInstance = Instantiate(playerAfterImage, transform);
+            AImageInstance.transform.SetParent(null, true);
+            AImageInstance.transform.position = new Vector3(positionsTTravel[i].x, positionsTTravel[i].y, positionsTTravel[i].z);
+            StartCoroutine(AfterImage(AImageInstance));
             
             yield return new WaitForSeconds(0.001f);
         }
@@ -116,8 +118,10 @@ public class TimeControl : MonoBehaviour
     }
     private IEnumerator AfterImage(GameObject playerAfterImageInstance)
     {
-        while(playerAfterImageInstance.GetComponent<SpriteRenderer>().color.a > 0)
+        int counter = 50;
+        while(counter > 0)
         {
+            counter--;
             Color AImageColor = playerAfterImageInstance.GetComponent<SpriteRenderer>().color;
             AImageColor.a -= 0.02f;
             playerAfterImageInstance.GetComponent<SpriteRenderer>().color = AImageColor;
@@ -125,12 +129,24 @@ public class TimeControl : MonoBehaviour
         }
         Destroy(playerAfterImageInstance);
     }
+    private IEnumerator AfterImageDuringTimeSlowed()
+    {
+        while(isTimeSlowed)
+        {
+            AImageInstance = Instantiate(playerAfterImage, transform);
+            StartCoroutine(AfterImage(AImageInstance));
+            AImageInstance.transform.SetParent(null, true);
+            AImageInstance.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+            yield return new WaitForSeconds(0.01f);
+        }
+    }
     private void TimeSlowDown(float timeSlowFactor, float pitchValue)
     {
         if(!isTimeSlowed)
         {
             isTimeSlowed = true;
             timeSlowDownSFX.Play();
+            StartCoroutine(AfterImage(AImageInstance));
         }
         else
         {
