@@ -7,9 +7,9 @@ public class TimeControl : MonoBehaviour
     [SerializeField] private AudioSource timeSlowDownSFX;
     [SerializeField] private AudioSource timeSpeedUpSFX;
     [SerializeField] private GameObject playerAfterImage;
-
+    private GameObject AImageInstance;
     private GameObject[] gObjectsInScene;
-    private Vector3[] positionsTTravel = new Vector3[700];
+    private Transform[] transformsTTravel = new Transform[700];
     private Transform[] childObjects;
     public float timeSlowDownFactor = 0.1f;
     public bool isTimeSlowed = false;
@@ -63,14 +63,14 @@ public class TimeControl : MonoBehaviour
     }
     private IEnumerator RecordPositionsForTimeTravel()
     {
-        for (int i = 0; i < positionsTTravel.Length; i++)
+        for (int i = 0; i < transformsTTravel.Length; i++)
         {
-            positionsTTravel[i] = transform.position;
-            if (i == positionsTTravel.Length - 1)
+            transformsTTravel[i] = transform.transform;
+            if (i == transformsTTravel.Length - 1)
             {
-                for (int e = 1; e < positionsTTravel.Length; e++)
+                for (int e = 1; e < transformsTTravel.Length; e++)
                 {
-                    positionsTTravel[e - 1] = positionsTTravel[e];
+                    transformsTTravel[e - 1] = transformsTTravel[e];
                 }
                 i--;
             }
@@ -93,13 +93,13 @@ public class TimeControl : MonoBehaviour
         GetComponent<BaseAimFunctionality>().enabled = false;
         GetComponent<Animator>().enabled = false;
         GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = false;
-        for (int i = positionsTTravel.Length - 1; i > 0; i--)
+        for (int i = transformsTTravel.Length - 1; i > 0; i--)
         {
-            transform.position = positionsTTravel[i];
-            /*
-            GameObject AImageInstance = Instantiate(playerAfterImage, transform);
-            StartCoroutine(AfterImage(AImageInstance));
-            */
+            transform.position = transformsTTravel[i].position;           
+            
+            //Instantiate(playerAfterImage, transformsTTravel[i]);
+            //StartCoroutine(AfterImage(AImageInstance));
+            
             yield return new WaitForSeconds(0.001f);
         }
         GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = true;
