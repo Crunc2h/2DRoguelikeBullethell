@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class TimeControl : MonoBehaviour
 {
+    [SerializeField] private AudioSource timeSlowDownSFX;
+    [SerializeField] private AudioSource timeSpeedUpSFX;
+    [SerializeField] private GameObject playerAfterImage;
+
     private GameObject[] gObjectsInScene;
     private Vector3[] positionsTTravel = new Vector3[700];
     private Transform[] childObjects;
@@ -23,7 +27,7 @@ public class TimeControl : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            if(!isTimeSlowed)
+            if(!isTimeSlowed && !isTimeTraveling)
             {
                 TimeSlowDown(timeSlowDownFactor, 0.2f);
             }
@@ -32,6 +36,7 @@ public class TimeControl : MonoBehaviour
                 TimeSlowDown(timeSlowDownFactor, 1f);
             }
         }
+        
         if(isTimeSlowed)
         {
             timeSlowdownCd -= Time.deltaTime;
@@ -78,6 +83,11 @@ public class TimeControl : MonoBehaviour
     }
     private IEnumerator TimeTravel()
     {
+        if(!isTimeSlowed)
+        {
+            TimeSlowDown(timeSlowDownFactor, 0.2f);
+            yield return new WaitForSeconds(1);
+        }
         isTimeTraveling = true;
         GetComponent<BasePlayerMovement>().enabled = false;
         GetComponent<BaseAimFunctionality>().enabled = false;
@@ -86,26 +96,47 @@ public class TimeControl : MonoBehaviour
         for (int i = positionsTTravel.Length - 1; i > 0; i--)
         {
             transform.position = positionsTTravel[i];
-            yield return new WaitForSeconds(0.002f);
+            /*
+            GameObject AImageInstance = Instantiate(playerAfterImage, transform);
+            StartCoroutine(AfterImage(AImageInstance));
+            */
+            yield return new WaitForSeconds(0.001f);
         }
         GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = true;
         GetComponent<Animator>().enabled = true;
         GetComponent<BaseAimFunctionality>().enabled = true;
         GetComponent<BasePlayerMovement>().enabled = true;
         StartCoroutine(RecordPositionsForTimeTravel());
+        if (isTimeSlowed)
+        {
+            TimeSlowDown(timeSlowDownFactor, 1f);
+        }
         isTimeTraveling = false;
         timeTravelCdActive = true;
+    }
+    private IEnumerator AfterImage(GameObject playerAfterImageInstance)
+    {
+        while(playerAfterImageInstance.GetComponent<SpriteRenderer>().color.a > 0)
+        {
+            Color AImageColor = playerAfterImageInstance.GetComponent<SpriteRenderer>().color;
+            AImageColor.a -= 0.02f;
+            playerAfterImageInstance.GetComponent<SpriteRenderer>().color = AImageColor;
+            yield return new WaitForSeconds(0.01f);
+        }
+        Destroy(playerAfterImageInstance);
     }
     private void TimeSlowDown(float timeSlowFactor, float pitchValue)
     {
         if(!isTimeSlowed)
         {
             isTimeSlowed = true;
+            timeSlowDownSFX.Play();
         }
         else
         {
             isTimeSlowed = false;
             timeSlowdownCd = 7f;
+            timeSpeedUpSFX.Play();
         }
         gObjectsInScene = FindObjectsOfType<GameObject>();      
         for (int i = 0; i < gObjectsInScene.Length; i++)
