@@ -9,11 +9,11 @@ public class TimeControl : MonoBehaviour
     private Transform[] childObjects;
     public float timeSlowDownFactor = 0.1f;
     public bool isTimeSlowed = false;
-    private float timeSlowdownCd = 7f;
+    private float timeSlowdownCd = 8f;
     
-    private float timeTravelCooldown = 14f;
+    private float timeTravelCooldown = 10f;
     private bool timeTravelCdActive = true;
-    private bool isTimeTraveling = false;
+    public bool isTimeTraveling = false;
 
     private void Awake()
     {
@@ -45,13 +45,14 @@ public class TimeControl : MonoBehaviour
         {
             StartCoroutine(TimeTravel());
         }
+        
         if(timeTravelCdActive)
         {
             timeTravelCooldown -= Time.unscaledDeltaTime;
             if(timeTravelCooldown <= 0f)
             {
                 timeTravelCdActive = false;
-                timeTravelCooldown = 14f;
+                timeTravelCooldown = 10f;
             }
         }
     }
@@ -78,11 +79,19 @@ public class TimeControl : MonoBehaviour
     private IEnumerator TimeTravel()
     {
         isTimeTraveling = true;
+        GetComponent<BasePlayerMovement>().enabled = false;
+        GetComponent<BaseAimFunctionality>().enabled = false;
+        GetComponent<Animator>().enabled = false;
+        GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = false;
         for (int i = positionsTTravel.Length - 1; i > 0; i--)
         {
             transform.position = positionsTTravel[i];
             yield return new WaitForSeconds(0.002f);
         }
+        GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = true;
+        GetComponent<Animator>().enabled = true;
+        GetComponent<BaseAimFunctionality>().enabled = true;
+        GetComponent<BasePlayerMovement>().enabled = true;
         StartCoroutine(RecordPositionsForTimeTravel());
         isTimeTraveling = false;
         timeTravelCdActive = true;

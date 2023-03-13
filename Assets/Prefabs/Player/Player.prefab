@@ -403,6 +403,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeSlowDownFactor: 0.1
   isTimeSlowed: 0
+  isTimeTraveling: 0
 --- !u!1 &5488864087045706307
 GameObject:
   m_ObjectHideFlags: 0

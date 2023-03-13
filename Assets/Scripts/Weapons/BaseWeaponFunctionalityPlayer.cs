@@ -28,7 +28,7 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
     private Vector3 projectileSpawnPos;
     public float originalProjectileForce;
     private bool lmbDown = false;
-    private bool isFiring = false;
+    public bool isFiring = false;
     private bool isReloading = false;
 
     private void Awake()
@@ -122,13 +122,15 @@ public class BaseWeaponFunctionalityPlayer : MonoBehaviour
     private IEnumerator automaticFiring()
     {
         isFiring = true;
-
-        while (lmbDown && !isReloading)
+        while (lmbDown && !isReloading && !GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeTraveling)
         {
             fireProjectileLogic();
             yield return new WaitForSeconds(1 / fireRate);
         }
-
+        if(GameObject.FindGameObjectWithTag("Player").GetComponent<TimeControl>().isTimeTraveling)
+        {
+            pistolFireSFX.Stop();
+        }
         isFiring = false;
     }
     private IEnumerator projectileLifeTime(GameObject projectile)

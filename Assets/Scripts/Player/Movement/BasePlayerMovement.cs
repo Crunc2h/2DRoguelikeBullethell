@@ -50,6 +50,7 @@ public class BasePlayerMovement : MonoBehaviour
             {
                 dashDirection = GetComponent<BaseAimFunctionality>().weaponAimDirection;
                 GetComponent<Animator>().SetBool("dash", true);
+                GetComponentInChildren<BaseWeaponFunctionalityPlayer>().isFiring = false;
                 weaponSlotOne.SetActive(false);
                 weaponSlotTwo.SetActive(false);
             }
