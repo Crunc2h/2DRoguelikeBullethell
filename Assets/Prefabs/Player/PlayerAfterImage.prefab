@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3186163210285556808}
   - component: {fileID: 3186163210285556809}
   m_Layer: 0
-  m_Name: PAILeft
+  m_Name: PlayerAfterImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,12 +73,12 @@ SpriteRenderer:
   m_SortingLayerID: 237221981
   m_SortingLayer: 4
   m_SortingOrder: 1
-  m_Sprite: {fileID: 1229131509, guid: 6405198c7e7208242a98cd616187607e, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.69803923}
-  m_FlipX: 1
+  m_Sprite: {fileID: -2025131517, guid: 4187ab96f371a41408ea2825781155ab, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5}
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.0625, y: 1.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
