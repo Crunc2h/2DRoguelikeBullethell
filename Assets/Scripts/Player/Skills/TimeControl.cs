@@ -129,14 +129,15 @@ public class TimeControl : MonoBehaviour
         }
         Destroy(playerAfterImageInstance);
     }
+    
     private IEnumerator AfterImageDuringTimeSlowed()
     {
-        while(isTimeSlowed)
+        while(isTimeSlowed && !isTimeTraveling)
         {
             AImageInstance = Instantiate(playerAfterImage, transform);
-            StartCoroutine(AfterImage(AImageInstance));
             AImageInstance.transform.SetParent(null, true);
             AImageInstance.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+            StartCoroutine(AfterImage(AImageInstance));
             yield return new WaitForSeconds(0.01f);
         }
     }
@@ -146,7 +147,7 @@ public class TimeControl : MonoBehaviour
         {
             isTimeSlowed = true;
             timeSlowDownSFX.Play();
-            StartCoroutine(AfterImage(AImageInstance));
+            StartCoroutine(AfterImageDuringTimeSlowed());
         }
         else
         {
