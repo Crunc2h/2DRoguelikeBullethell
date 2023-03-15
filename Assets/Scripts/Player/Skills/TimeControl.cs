@@ -6,10 +6,14 @@ public class TimeControl : MonoBehaviour
 {
     [SerializeField] private AudioSource timeSlowDownSFX;
     [SerializeField] private AudioSource timeSpeedUpSFX;
+    
     [SerializeField] private GameObject playerAfterImage;
+    
     private GameObject AImageInstance;
     private GameObject[] gObjectsInScene;
     private Vector3[] positionsTTravel = new Vector3[700];
+    private Sprite[] spritesTTravel = new Sprite[700];
+    private bool[] spriteFlipXTTravel = new bool[700];
     private Transform[] childObjects;
     public float timeSlowDownFactor = 0.1f;
     public bool isTimeSlowed = false;
@@ -21,10 +25,11 @@ public class TimeControl : MonoBehaviour
 
     private void Awake()
     {
-        StartCoroutine(RecordPositionsForTimeTravel());
+        StartCoroutine(RecordPositionsAndSpritesForTimeTravel());
     }
     private void Update()
     {
+        AfterImageManager();
         if(Input.GetKeyDown(KeyCode.Space))
         {
             if(!isTimeSlowed && !isTimeTraveling)
@@ -61,16 +66,20 @@ public class TimeControl : MonoBehaviour
             }
         }
     }
-    private IEnumerator RecordPositionsForTimeTravel()
+    private IEnumerator RecordPositionsAndSpritesForTimeTravel()
     {
         for (int i = 0; i < positionsTTravel.Length; i++)
         {
             positionsTTravel[i] = transform.position;
+            spritesTTravel[i] = GetComponent<SpriteRenderer>().sprite;
+            spriteFlipXTTravel[i] = GetComponent<SpriteRenderer>().flipX;
             if (i == positionsTTravel.Length - 1)
             {
                 for (int e = 1; e < positionsTTravel.Length; e++)
                 {
                     positionsTTravel[e - 1] = positionsTTravel[e];
+                    spritesTTravel[e - 1] = spritesTTravel[e];
+                    spriteFlipXTTravel[e - 1] = spriteFlipXTTravel[e];
                 }
                 i--;
             }
@@ -92,36 +101,52 @@ public class TimeControl : MonoBehaviour
         GetComponent<BasePlayerMovement>().enabled = false;
         GetComponent<BaseAimFunctionality>().enabled = false;
         GetComponent<Animator>().enabled = false;
-        GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = false;
+        GetComponent<BaseAimFunctionality>().weaponSlotOne.SetActive(false);
+        GetComponent<BaseAimFunctionality>().weaponSlotTwo.SetActive(false);
+        AfterImagesWhenTSlowerOrTTraveling();
+
         for (int i = positionsTTravel.Length - 1; i > 0; i--)
         {
-            transform.position = positionsTTravel[i];           
-            
-            AImageInstance = Instantiate(playerAfterImage, transform);
-            AImageInstance.transform.SetParent(null, true);
-            AImageInstance.transform.position = new Vector3(positionsTTravel[i].x, positionsTTravel[i].y, positionsTTravel[i].z);
-            StartCoroutine(AfterImage(AImageInstance));
-            
-            yield return new WaitForSeconds(0.001f);
+            transform.position = positionsTTravel[i];
+            GetComponent<SpriteRenderer>().sprite = spritesTTravel[i];
+            GetComponent<SpriteRenderer>().flipX = spriteFlipXTTravel[i];
+            yield return new WaitForSeconds(0.005f);
         }
-        GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = true;
+        GetComponent<BaseAimFunctionality>().weaponSlotOne.SetActive(true);
+        GetComponent<BaseAimFunctionality>().weaponSlotTwo.SetActive(true);
         GetComponent<Animator>().enabled = true;
         GetComponent<BaseAimFunctionality>().enabled = true;
         GetComponent<BasePlayerMovement>().enabled = true;
-        StartCoroutine(RecordPositionsForTimeTravel());
+        
+        StartCoroutine(RecordPositionsAndSpritesForTimeTravel());
+        
         if (isTimeSlowed)
         {
             TimeSlowDown(timeSlowDownFactor, 1f);
         }
+        
         isTimeTraveling = false;
         timeTravelCdActive = true;
     }
-    private IEnumerator AfterImage(GameObject playerAfterImageInstance)
+    private void AfterImageManager()
     {
-        int counter = 50;
-        while(counter > 0)
+        playerAfterImage.GetComponent<SpriteRenderer>().sprite = GetComponent<SpriteRenderer>().sprite;
+        playerAfterImage.GetComponent<SpriteRenderer>().flipX = GetComponent<SpriteRenderer>().flipX;
+        Color AImageColor = playerAfterImage.GetComponent<SpriteRenderer>().color;
+        AImageColor.a = 0.5f;
+        playerAfterImage.GetComponent<SpriteRenderer>().color = AImageColor;
+    }
+    private void CreateAfterImage()
+    {
+        AImageInstance = Instantiate(playerAfterImage, transform);
+        AImageInstance.transform.SetParent(null, true);
+        AImageInstance.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        StartCoroutine(SustainAndDestroyAfterImage(AImageInstance));
+    }
+    private IEnumerator SustainAndDestroyAfterImage(GameObject playerAfterImageInstance)
+    {
+        for(int i = 0; i < 25; i++)
         {
-            counter--;
             Color AImageColor = playerAfterImageInstance.GetComponent<SpriteRenderer>().color;
             AImageColor.a -= 0.02f;
             playerAfterImageInstance.GetComponent<SpriteRenderer>().color = AImageColor;
@@ -129,15 +154,16 @@ public class TimeControl : MonoBehaviour
         }
         Destroy(playerAfterImageInstance);
     }
-    
-    private IEnumerator AfterImageDuringTimeSlowed()
+    private IEnumerator AfterImagesWhenTSlowerOrTTraveling()
     {
         while(isTimeSlowed && !isTimeTraveling)
         {
-            AImageInstance = Instantiate(playerAfterImage, transform);
-            AImageInstance.transform.SetParent(null, true);
-            AImageInstance.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-            StartCoroutine(AfterImage(AImageInstance));
+            CreateAfterImage();
+            yield return new WaitForSeconds(0.01f);
+        }
+        while(isTimeTraveling)
+        {
+            CreateAfterImage();
             yield return new WaitForSeconds(0.01f);
         }
     }
@@ -147,7 +173,7 @@ public class TimeControl : MonoBehaviour
         {
             isTimeSlowed = true;
             timeSlowDownSFX.Play();
-            StartCoroutine(AfterImageDuringTimeSlowed());
+            StartCoroutine(AfterImagesWhenTSlowerOrTTraveling());
         }
         else
         {

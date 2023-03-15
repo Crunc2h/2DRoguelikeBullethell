@@ -8,8 +8,8 @@ public class BaseAimFunctionality : MonoBehaviour
     public Vector2 weaponAimDirection;
     private Vector3[] playerPositions = new Vector3[700];
     public float weaponRotationAngle = 0f;
-    private GameObject weaponSlotOne;
-    private GameObject weaponSlotTwo;
+    public GameObject weaponSlotOne;
+    public GameObject weaponSlotTwo;
     public Vector2 targetWorldPosition;
     private bool isAimCalcDurTSActive = false;
     private void Awake()

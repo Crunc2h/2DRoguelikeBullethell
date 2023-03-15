@@ -344,6 +344,8 @@ MonoBehaviour:
   weapon: {fileID: 0}
   weaponAimDirection: {x: 0, y: 0}
   weaponRotationAngle: 0
+  weaponSlotOne: {fileID: 0}
+  weaponSlotTwo: {fileID: 0}
   targetWorldPosition: {x: 0, y: 0}
 --- !u!114 &5488864086591186679
 MonoBehaviour:
