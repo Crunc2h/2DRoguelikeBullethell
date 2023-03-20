@@ -54,12 +54,12 @@ public class BasePlayerMovement : MonoBehaviour
                 GetComponentInChildren<BaseWeaponFunctionalityPlayer>().gameObject.GetComponent<SpriteRenderer>().enabled = false;
                 GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = false;
                 weaponSlotOne.GetComponent<SpriteRenderer>().enabled = false;
-                weaponSlotOne.GetComponent<SpriteRenderer>().enabled = false;
+                weaponSlotTwo.GetComponent<SpriteRenderer>().enabled = false;
             }
             else if(GetComponent<Animator>().GetBool("dash") && dashDuration <= 0f)
             {
                 weaponSlotOne.GetComponent<SpriteRenderer>().enabled = true;
-                weaponSlotOne.GetComponent<SpriteRenderer>().enabled = true;
+                weaponSlotTwo.GetComponent<SpriteRenderer>().enabled = true;
                 GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = true;
                 GetComponentInChildren<BaseWeaponFunctionalityPlayer>().gameObject.GetComponent<SpriteRenderer>().enabled = true;
                 GetComponent<Animator>().SetBool("dash", false);

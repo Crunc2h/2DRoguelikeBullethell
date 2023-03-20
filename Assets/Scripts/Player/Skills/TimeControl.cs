@@ -22,6 +22,8 @@ public class TimeControl : MonoBehaviour
     public bool isTimeSlowed = false;
 
     //Variables regarding time travel
+    private GameObject weaponSlotOne;
+    private GameObject weaponSlotTwo;
     private float timeTravelCooldown = 10f;
     private bool timeTravelCdActive = true;
     public bool isTimeTraveling = false;
@@ -32,6 +34,7 @@ public class TimeControl : MonoBehaviour
 
     private void Awake()
     {
+        Definitions();
         StartCoroutine(RecordPositionsAndSpritesForTimeTravel());
     }
     private void Update()
@@ -132,23 +135,31 @@ public class TimeControl : MonoBehaviour
         if (!isTimeSlowed)
         {
             TimeSlowDown(timeSlowDownFactor, 0.2f);
-            //Commence time travel - Deactivates basic funcitons for the player
+            //Commence time travel when time is not slowed - Deactivates basic funcitons for the player
+            GetComponent<BoxCollider2D>().enabled = false;
             GetComponent<BasePlayerMovement>().enabled = false;
             GetComponent<BaseAimFunctionality>().enabled = false;
             GetComponent<Animator>().enabled = false;
-            GetComponent<BaseAimFunctionality>().weaponSlotOne.SetActive(false);
-            GetComponent<BaseAimFunctionality>().weaponSlotTwo.SetActive(false);
+            GetComponentInChildren<BaseWeaponFunctionalityPlayer>().isFiring = false;
+            GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = false;
             yield return new WaitForSeconds(1);
+            weaponSlotOne.GetComponent<SpriteRenderer>().enabled = false;
+            weaponSlotTwo.GetComponent<SpriteRenderer>().enabled = false;
+            GetComponentInChildren<BaseWeaponFunctionalityPlayer>().gameObject.GetComponent<SpriteRenderer>().enabled = false;
         }
         else
         {
-            //Commence time travel - Deactivates basic funcitons for the player
+            //Commence time travel when time slowed - Deactivates basic funcitons for the player
+            GetComponent<BoxCollider2D>().enabled = false;
             GetComponent<BasePlayerMovement>().enabled = false;
             GetComponent<BaseAimFunctionality>().enabled = false;
             GetComponent<Animator>().enabled = false;
-            GetComponent<BaseAimFunctionality>().weaponSlotOne.SetActive(false);
-            GetComponent<BaseAimFunctionality>().weaponSlotTwo.SetActive(false);
+            GetComponentInChildren<BaseWeaponFunctionalityPlayer>().isFiring = false;
+            GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = false;
             yield return new WaitForSeconds(1);
+            weaponSlotOne.GetComponent<SpriteRenderer>().enabled = false;
+            weaponSlotTwo.GetComponent<SpriteRenderer>().enabled = false;
+            GetComponentInChildren<BaseWeaponFunctionalityPlayer>().gameObject.GetComponent<SpriteRenderer>().enabled = false;
         }
              
         //Activates after images
@@ -160,16 +171,19 @@ public class TimeControl : MonoBehaviour
             transform.position = positionsTTravel[i];
             GetComponent<SpriteRenderer>().sprite = spritesTTravel[i];
             GetComponent<SpriteRenderer>().flipX = spriteFlipXTTravel[i];
-            yield return new WaitForSeconds(0.005f);
+            yield return new WaitForSeconds(0.003f);
         }
 
         //Reactivate basic player functions
-        GetComponent<BaseAimFunctionality>().weaponSlotOne.SetActive(true);
-        GetComponent<BaseAimFunctionality>().weaponSlotTwo.SetActive(true);
+        GetComponent<BoxCollider2D>().enabled = true;
         GetComponent<Animator>().enabled = true;
         GetComponent<BaseAimFunctionality>().enabled = true;
         GetComponent<BasePlayerMovement>().enabled = true;
-        
+        GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = true;
+        weaponSlotOne.GetComponent<SpriteRenderer>().enabled = true;
+        weaponSlotTwo.GetComponent<SpriteRenderer>().enabled = true;
+        GetComponentInChildren<BaseWeaponFunctionalityPlayer>().gameObject.GetComponent<SpriteRenderer>().enabled = true;
+
         //Restart recording player parameters
         StartCoroutine(RecordPositionsAndSpritesForTimeTravel());
         
@@ -386,6 +400,11 @@ public class TimeControl : MonoBehaviour
                 }
             }
         }
+    }
+    private void Definitions()
+    {
+        weaponSlotOne = transform.GetChild(0).gameObject;
+        weaponSlotTwo = transform.GetChild(1).gameObject;
     }
 
 }
