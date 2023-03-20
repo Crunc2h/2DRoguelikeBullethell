@@ -39,13 +39,15 @@ public class TimeControl : MonoBehaviour
         AfterImageManager();
         ListenForPlayerInput();
         //Time slowdown duration
-        if (isTimeSlowed)
+        if (isTimeSlowed && !isTimeTraveling)
         {
             timeSlowdownDuration -= Time.deltaTime;
             if(timeSlowdownDuration <= 0f)
             {
                 TimeSlowDown(timeSlowDownFactor, 1f);
                 timeSlowdownDuration = 7f;
+                //Activate time slow down cooldown
+                timeSlowdownCdActive = true;
             }
         }
 
@@ -130,16 +132,25 @@ public class TimeControl : MonoBehaviour
         if (!isTimeSlowed)
         {
             TimeSlowDown(timeSlowDownFactor, 0.2f);
+            //Commence time travel - Deactivates basic funcitons for the player
+            GetComponent<BasePlayerMovement>().enabled = false;
+            GetComponent<BaseAimFunctionality>().enabled = false;
+            GetComponent<Animator>().enabled = false;
+            GetComponent<BaseAimFunctionality>().weaponSlotOne.SetActive(false);
+            GetComponent<BaseAimFunctionality>().weaponSlotTwo.SetActive(false);
             yield return new WaitForSeconds(1);
         }
-        
-        //Commence time travel - Deactivates basic funcitons for the player
-        GetComponent<BasePlayerMovement>().enabled = false;
-        GetComponent<BaseAimFunctionality>().enabled = false;
-        GetComponent<Animator>().enabled = false;
-        GetComponent<BaseAimFunctionality>().weaponSlotOne.SetActive(false);
-        GetComponent<BaseAimFunctionality>().weaponSlotTwo.SetActive(false);
-        
+        else
+        {
+            //Commence time travel - Deactivates basic funcitons for the player
+            GetComponent<BasePlayerMovement>().enabled = false;
+            GetComponent<BaseAimFunctionality>().enabled = false;
+            GetComponent<Animator>().enabled = false;
+            GetComponent<BaseAimFunctionality>().weaponSlotOne.SetActive(false);
+            GetComponent<BaseAimFunctionality>().weaponSlotTwo.SetActive(false);
+            yield return new WaitForSeconds(1);
+        }
+             
         //Activates after images
         AfterImagesWhenTSlowerOrTTraveling();
 
@@ -149,7 +160,7 @@ public class TimeControl : MonoBehaviour
             transform.position = positionsTTravel[i];
             GetComponent<SpriteRenderer>().sprite = spritesTTravel[i];
             GetComponent<SpriteRenderer>().flipX = spriteFlipXTTravel[i];
-            yield return new WaitForSeconds(0.001f);
+            yield return new WaitForSeconds(0.005f);
         }
 
         //Reactivate basic player functions
@@ -166,6 +177,10 @@ public class TimeControl : MonoBehaviour
         if(isTimeSlowed)
         {
             TimeSlowDown(timeSlowDownFactor, 1);
+            if(timeSlowdownDuration != 7f)
+            {
+                timeSlowdownDuration = 7f;
+            }
         }
         
         //End time travel and activate cooldown
@@ -370,8 +385,6 @@ public class TimeControl : MonoBehaviour
                     }                  
                 }
             }
-            //Activate time slow down cooldown
-            timeSlowdownCdActive = true;
         }
     }
 

@@ -51,13 +51,17 @@ public class BasePlayerMovement : MonoBehaviour
                 dashDirection = GetComponent<BaseAimFunctionality>().weaponAimDirection;
                 GetComponent<Animator>().SetBool("dash", true);
                 GetComponentInChildren<BaseWeaponFunctionalityPlayer>().isFiring = false;
-                weaponSlotOne.SetActive(false);
-                weaponSlotTwo.SetActive(false);
+                GetComponentInChildren<BaseWeaponFunctionalityPlayer>().gameObject.GetComponent<SpriteRenderer>().enabled = false;
+                GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = false;
+                weaponSlotOne.GetComponent<SpriteRenderer>().enabled = false;
+                weaponSlotOne.GetComponent<SpriteRenderer>().enabled = false;
             }
             else if(GetComponent<Animator>().GetBool("dash") && dashDuration <= 0f)
             {
-                weaponSlotOne.SetActive(true);
-                weaponSlotTwo.SetActive(true);
+                weaponSlotOne.GetComponent<SpriteRenderer>().enabled = true;
+                weaponSlotOne.GetComponent<SpriteRenderer>().enabled = true;
+                GetComponentInChildren<BaseWeaponFunctionalityPlayer>().enabled = true;
+                GetComponentInChildren<BaseWeaponFunctionalityPlayer>().gameObject.GetComponent<SpriteRenderer>().enabled = true;
                 GetComponent<Animator>().SetBool("dash", false);
             }
             
